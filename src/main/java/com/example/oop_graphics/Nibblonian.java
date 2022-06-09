@@ -3,13 +3,13 @@ package com.example.oop_graphics;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.File;
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -80,12 +80,13 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         try {
             this.image = new ImageView(new Image(new File("src/images/nibblonian.png").toURI().toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
         this.border = new Rectangle(0, 0, this.width, this.height);
         this.border.setStrokeWidth(3);
         this.border.setFill(Color.TRANSPARENT);
         this.border.setStroke(Color.PURPLE);
+        this.border.setOpacity(0);
 
         this.health = new Line();
         this.health.setStroke(Color.GREEN);
@@ -98,9 +99,15 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.transformedDevices.setX(5);
         this.transformedDevices.setY(10);
 
-        this.microGroup = new Group(image, health, transformedDevices);
+
+        this.microGroup = new Group(image, health, transformedDevices, border);
         this.microGroup.setLayoutX(this.posX);
         this.microGroup.setLayoutY(this.posY);
+        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            activateDeactivateBorder();
+        });
+
+
     }
 
     public Nibblonian() {
@@ -113,7 +120,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void setName(String name) {
         this.name = name;
     }
-
     public boolean isBad() {
         return isBad;
     }
@@ -130,6 +136,19 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         isActive = active;
     }
 
+    public void activateDeactivateBorder() {
+        this.isActive = !this.isActive;
+        if (this.isActive) {
+            this.border.setOpacity(1);
+        }
+        if (!this.isActive) {
+            this.border.setOpacity(0);
+        }
+    }
+    public void cancelActivation() {
+        this.isActive = false;
+        this.border.setOpacity(0);
+    }
     public double getPosX() {
         return posX;
     }
@@ -272,6 +291,8 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void setBorder(Rectangle border) {
         this.border = border;
     }
+
+
 
 
 

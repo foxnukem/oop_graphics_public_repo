@@ -38,7 +38,7 @@ public class MomFriendlyRobots {
         try {
             this.image = new ImageView(new File("src/images/momcorp.png").toURI().toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
         this.image.setFitWidth(this.width);
         this.image.setFitHeight(this.height - 110);

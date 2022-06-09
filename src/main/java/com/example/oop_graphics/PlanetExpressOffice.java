@@ -33,8 +33,11 @@ public class PlanetExpressOffice {
         this.officeName.setFill(Color.WHITE);
         this.officeName.setX(this.xPosition + 10);
         this.officeName.setY(this.yPosition + 25);
-
-        this.image = new ImageView(new File("src/images/planetexpress.png").toURI().toString());
+        try {
+            this.image = new ImageView(new File("src/images/planetexpress.png").toURI().toString());
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
         this.image.setFitWidth(this.width);
         this.image.setFitHeight(this.height - 110);
         this.image.setX(this.xPosition);

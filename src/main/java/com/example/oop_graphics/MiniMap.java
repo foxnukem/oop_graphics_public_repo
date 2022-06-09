@@ -1,7 +1,9 @@
 package com.example.oop_graphics;
 
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
@@ -9,32 +11,40 @@ import javafx.scene.transform.Scale;
 import java.io.File;
 
 public class MiniMap {
-    private final Scale scale;
-    private double miniMapHeight;
-    private double miniMapWidth;
+    public final static Scale scale;
+    private static double miniMapHeight;
+    private static double miniMapWidth;
     private Pane pane;
     private Rectangle container;
     private Rectangle mapArea;
     private Rectangle border;
     private Image miniMapBackground;
 
-
+    static {
+        scale = new Scale(0.1, 0.1);
+        miniMapHeight = NewNewYork.getRootHeight() * scale.getX();
+        miniMapWidth = NewNewYork.getRootWidth() * scale.getY();
+    }
     public MiniMap() {
-        this.scale = new Scale(0.1, 0.1);
-        this.miniMapHeight = NewNewYork.getRootHeight() * scale.getX();
-        this.miniMapWidth = NewNewYork.getRootWidth() * scale.getY();
+
         this.pane = new Pane();
         this.pane.setMinSize(miniMapWidth, miniMapHeight);
+        this.pane.setPrefSize(miniMapWidth, miniMapHeight);
+        this.pane.setMaxSize(miniMapWidth, miniMapHeight);
 
         try {
             miniMapBackground = new Image(new File("src/images/beach.png").toURI().toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
         this.container = new Rectangle(0, 0, pane.getMinWidth(), pane.getMinHeight());
         container.setFill(new ImagePattern(miniMapBackground));
 
-        this.pane.getChildren().addAll(container);
+        this.mapArea = new Rectangle(0, 0, Main.getViewportWidth() * scale.getX(), Main.getViewPortHeight() * scale.getY());
+        this.mapArea.setFill(Color.TRANSPARENT);
+        this.mapArea.setStroke(Color.GREEN);
+        this.mapArea.setStrokeWidth(2);
+        this.pane.getChildren().addAll(container, mapArea);
     }
 
     public double getMiniMapHeight() {

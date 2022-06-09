@@ -2,9 +2,16 @@ package com.example.oop_graphics;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -12,40 +19,93 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Main extends Application {
-    private final static int viewPortWidth = 1920;
-    private final static int viewPortHeight = 1080;
+    //TODO set viewport to fullhd and add setMaximized(true) to stage
+    private final static int viewPortWidth = 1600;
+    private final static int viewPortHeight = 900;
+    public static int getViewportWidth() {
+        return viewPortWidth;
+    }
+    public static int getViewPortHeight() {
+        return viewPortHeight;
+    }
     private static double scrollX;
     private static double scrollY;
-    private final static NewNewYork universalObject = new NewNewYork();
-    private static ScrollPane scrollPane = new ScrollPane(NewNewYork.getRoot());
-    private static Scene mainScene = new Scene(scrollPane, viewPortWidth, viewPortHeight);
+    private static Pane infoPane = new Pane();
+    private static boolean infoEnabled = false;
+    private static Nibblonian microObjectForInfoPane;
+    private final static NewNewYork newNewYork = new NewNewYork(10);
+    public static StackPane group = new StackPane();
+    private static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
+    private static Scene scene;
     @Override
     public void start(Stage stage) throws IOException {
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
-        universalObject.addCitizen(new Nibblonian());
-        universalObject.addCitizen(new Fry());
-        universalObject.addCitizen(new RobotBender());
-        universalObject.addCitizen(new RobotSanta());
+        newNewYork.addCitizen(new Nibblonian());
+        newNewYork.addCitizen(new Fry());
+        newNewYork.addCitizen(new RobotBender());
+        newNewYork.addCitizen(new RobotSanta());
+        initInfoPane();
+        scrollPane.setPannable(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        group.getChildren().addAll(scrollPane, newNewYork.getMiniMap().getPane(), infoPane);
+        group.setAlignment(scrollPane, Pos.TOP_LEFT);
+        group.setAlignment(newNewYork.getMiniMap().getPane(), Pos.TOP_RIGHT);
+        group.setAlignment(infoPane, Pos.BOTTOM_RIGHT);
+        scene = new Scene(group, viewPortWidth, viewPortHeight);
 
-        Parent parent = FXMLLoader.load(getClass().getResource("main.fxml"));
-        NewNewYork.getRoot().getChildren().add(parent);
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            // TODO create working methods for move, with different step
+            for (Nibblonian n : newNewYork.getCitizens()) {
+                if (n.isActive()) {
+                    // Move left
+                    if (keyEvent.getCode() == KeyCode.H) {
+                        n.getMicroGroup().setLayoutX(n.getMicroGroup().getLayoutX() - 3);
+                    }
+                    // Move down
+                    if (keyEvent.getCode() == KeyCode.J) {
+                        n.getMicroGroup().setLayoutY(n.getMicroGroup().getLayoutY() + 3);
+                    }
+                    // Move up
+                    if (keyEvent.getCode() == KeyCode.K) {
+                        n.getMicroGroup().setLayoutY(n.getMicroGroup().getLayoutY() - 3);
+                    }
+                    // Move right
+                    if (keyEvent.getCode() == KeyCode.L) {
+                        n.getMicroGroup().setLayoutX(n.getMicroGroup().getLayoutX() + 3);
+                    }
+                    // Delete activated
+                    if (keyEvent.getCode() == KeyCode.DELETE) {
 
-        scrollPane.viewportBoundsProperty().addListener((observableValue, o, t1) -> {
+                    }
+                    // Cancel activation
+                    if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                        n.cancelActivation();
+                    }
+                }
+            }
+            // Move quicker
+            if (keyEvent.getCode() == KeyCode.Y) {
 
-            Main.scrollX = (-1) * (int) t1.getMinX();
-            Main.scrollY = (-1) * (int) t1.getMinY();
+            }
+            // Move slower
+            if (keyEvent.getCode() == KeyCode.U) {
 
-            parent.setLayoutX(Main.scrollX);
-            parent.setLayoutY(Main.scrollY);
+            }
+            // Dialog for adding microobjects
+            if (keyEvent.getCode() == KeyCode.INSERT) {
 
-            universalObject.getMiniMap().getPane().setLayoutX(Main.scrollX + 1430);
-            universalObject.getMiniMap().getPane().setLayoutY(Main.scrollY + 31);
+            }
+
+            // Last activated info
+            if (keyEvent.getCode() == KeyCode.I) {
+                infoEnabled = !infoEnabled;
+                updateInfo();
+            }
+
 
         });
         stage.setTitle("Futurama. The Game");
-        stage.setMaximized(true);
-        stage.setScene(mainScene);
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -59,6 +119,27 @@ public class Main extends Application {
         window.showAndWait();
     }
 
+    public void initInfoPane() {
+        Rectangle container = new Rectangle(0, 0, newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
+        infoPane.setMinSize(newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
+        infoPane.setPrefSize(newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
+        infoPane.setMaxSize(newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
+        Label name = new Label("Ім'я: \n");
+        Label level = new Label("Рівень: \n");
+        Label health = new Label("Здоров'я: \n");
+        Label travelledDistance = new Label("Пройдена відстань: \n");
+        Label devices = new Label("Опрацьовані: ");
+        container.setFill(Color.GRAY);
+        infoPane.getChildren().addAll(container, name, level, health, travelledDistance, devices);
+        infoPane.setOpacity(0);
+    }
+    public void updateInfo() {
+        if (infoEnabled) {
+            infoPane.setOpacity(1);
+        } else {
+            infoPane.setOpacity(0);
+        }
+    }
     public static void main(String[] args) {
         launch();
     }

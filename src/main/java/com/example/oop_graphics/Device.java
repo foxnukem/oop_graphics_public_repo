@@ -9,6 +9,7 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.security.spec.ECField;
+import java.util.Objects;
 
 public class Device {
     public enum DeviceStatus {
@@ -46,7 +47,7 @@ public class Device {
         try {
             this.image = new ImageView(new Image(new File("images/device.png").toURI().toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
         this.image.setFitWidth(this.width - 50);
         this.image.setFitHeight(this.height - 50);
@@ -104,7 +105,13 @@ public class Device {
     public DeviceStatus getStatus() {
         return status;
     }
+    @Override
+    public int hashCode() {
+        return Objects.hash(statusInText, status, xPosition, yPosition, width, height, image, border, macroGroup);
+    }
 
-
-
+    @Override
+    public String toString() {
+        return Integer.toString(this.hashCode());
+    }
 }

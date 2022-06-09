@@ -3,6 +3,7 @@ package com.example.oop_graphics;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 
 import java.io.File;
@@ -28,11 +29,14 @@ public class RobotBender extends Fry {
         try {
             this.image = new ImageView(new Image(new File("src/images/bender.png").toURI().toString()));
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
-        this.microGroup = new Group(image, health, transformedDevices);
+        this.microGroup = new Group(image, health, transformedDevices, border);
         this.microGroup.setLayoutX(this.posX);
         this.microGroup.setLayoutY(this.posY);
+        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            activateDeactivateBorder();
+        });
     }
 
     public RobotBender() {
