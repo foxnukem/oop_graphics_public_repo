@@ -23,7 +23,7 @@ public class NewNewYork {
 
     private final static int rootWidth;
     private final static int rootHeight;
-    private Pane root;
+    private final Pane root;
 
     private Text undefinedDevices;
     private Text safeDevices;
@@ -40,7 +40,7 @@ public class NewNewYork {
         root = new Pane();
         planetExpressOffice = new PlanetExpressOffice();
         momFriendlyRobots = new MomFriendlyRobots();
-        miniMap = new MiniMap();
+        miniMap = new MiniMap(planetExpressOffice, momFriendlyRobots);
         citizens = new ArrayList<>();
     }
 
@@ -185,14 +185,17 @@ public class NewNewYork {
     }
 
     public void addCitizen(Nibblonian citizen) {
-        if (!(citizens.contains(citizen)) && (citizen instanceof RobotSanta)) {
-            this.citizens.add(citizen);
+        if (citizen instanceof RobotSanta) {
             this.momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
-        } else if (!(citizens.contains(citizen)) && !(citizen instanceof RobotSanta)) {
             this.citizens.add(citizen);
+            root.getChildren().add(citizen.getMicroGroup());
+            this.miniMap.addCitizenToMiniMap(citizen);
+        } else {
             this.planetExpressOffice.addTeamMember(citizen);
+            this.citizens.add(citizen);
+            root.getChildren().add(citizen.getMicroGroup());
+            this.miniMap.addCitizenToMiniMap(citizen);
         }
-        root.getChildren().add(citizen.getMicroGroup());
     }
 
 

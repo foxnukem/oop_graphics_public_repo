@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Main extends Application {
-    //TODO set viewport to fullhd and add setMaximized(true) to stage
+    public static long startId = 1000;
+    //TODO set viewport to fullHD and add setMaximized(true) to stage
     private final static int viewPortWidth = 1600;
     private final static int viewPortHeight = 900;
     public static int getViewportWidth() {
@@ -30,19 +31,20 @@ public class Main extends Application {
     }
     private static double scrollX;
     private static double scrollY;
-    private static Pane infoPane = new Pane();
+    private final static Pane infoPane = new Pane();
     private static boolean infoEnabled = false;
     private static Nibblonian microObjectForInfoPane;
     private final static NewNewYork newNewYork = new NewNewYork(10);
     public static StackPane group = new StackPane();
-    private static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
+    private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
     private static Scene scene;
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         newNewYork.addCitizen(new Nibblonian());
         newNewYork.addCitizen(new Fry());
         newNewYork.addCitizen(new RobotBender());
         newNewYork.addCitizen(new RobotSanta());
+
         initInfoPane();
         scrollPane.setPannable(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -51,10 +53,11 @@ public class Main extends Application {
         group.setAlignment(scrollPane, Pos.TOP_LEFT);
         group.setAlignment(newNewYork.getMiniMap().getPane(), Pos.TOP_RIGHT);
         group.setAlignment(infoPane, Pos.BOTTOM_RIGHT);
+        infoPane.toBack();
         scene = new Scene(group, viewPortWidth, viewPortHeight);
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            // TODO create working methods for move, with different step
+            //TODO create working methods for move, with different step
             for (Nibblonian n : newNewYork.getCitizens()) {
                 if (n.isActive()) {
                     // Move left
@@ -93,7 +96,11 @@ public class Main extends Application {
             }
             // Dialog for adding microobjects
             if (keyEvent.getCode() == KeyCode.INSERT) {
-
+                try {
+                    insertNewMicro(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             // Last activated info
@@ -101,8 +108,12 @@ public class Main extends Application {
                 infoEnabled = !infoEnabled;
                 updateInfo();
             }
+        });
+        scrollPane.viewportBoundsProperty().addListener((observableValue, bounds, t1) -> {
+            scrollX = -1 * (int) t1.getMinX();
+            scrollY = -1 * (int) t1.getMinY();
 
-
+            System.out.println("X: " +scrollX + " Y: "  + scrollY);
         });
         stage.setTitle("Futurama. The Game");
         stage.setScene(scene);
@@ -136,11 +147,16 @@ public class Main extends Application {
     public void updateInfo() {
         if (infoEnabled) {
             infoPane.setOpacity(1);
+            infoPane.toFront();
         } else {
             infoPane.setOpacity(0);
+            infoPane.toBack();
         }
     }
     public static void main(String[] args) {
         launch();
+    }
+    public static NewNewYork getWorld() {
+        return Main.newNewYork;
     }
 }

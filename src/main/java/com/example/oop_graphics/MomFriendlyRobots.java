@@ -12,11 +12,11 @@ import java.util.ArrayList;
 
 public class MomFriendlyRobots {
     private ArrayList<RobotSanta> robotSantas;
-    private double xPosition;
-    private double yPosition;
+    private double posX;
+    private double posY;
     private final double width;
     private final double height;
-    private ImageView image;
+    private ImageView imageView;
     private Rectangle adjacentArea;
     private Text officeName;
     private Group momCorpArea;
@@ -24,36 +24,36 @@ public class MomFriendlyRobots {
     public MomFriendlyRobots() {
         this.robotSantas = new ArrayList<>();
 
-        this.xPosition = 3765;
-        this.yPosition = 2335;
+        this.posX = 3765;
+        this.posY = 2335;
         this.width = 225;
         this.height = 409;
 
         this.officeName = new Text("Mom Friendly Robots");
         this.officeName.setFont(new Font("Monako", 20));
         this.officeName.setFill(Color.WHITE);
-        this.officeName.setX(this.xPosition + 10);
-        this.officeName.setY(this.yPosition + 25);
+        this.officeName.setX(this.posX + 10);
+        this.officeName.setY(this.posY + 25);
 
         try {
-            this.image = new ImageView(new File("src/images/momcorp.png").toURI().toString());
+            this.imageView = new ImageView(new File("src/images/momcorp.png").toURI().toString());
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.image.setFitWidth(this.width);
-        this.image.setFitHeight(this.height - 110);
-        this.image.setX(this.xPosition);
-        this.image.setY(this.yPosition + 30);
+        this.imageView.setFitWidth(this.width);
+        this.imageView.setFitHeight(this.height - 110);
+        this.imageView.setX(this.posX);
+        this.imageView.setY(this.posY + 30);
 
         this.adjacentArea = new Rectangle(this.width, this.height);
         this.adjacentArea.setFill(Color.rgb(167, 181, 146));
         this.adjacentArea.setOpacity(0.4);
-        this.adjacentArea.setX(this.xPosition);
-        this.adjacentArea.setY(this.yPosition);
+        this.adjacentArea.setX(this.posX);
+        this.adjacentArea.setY(this.posY);
         this.adjacentArea.setArcHeight(40);
         this.adjacentArea.setArcWidth(40);
 
-        this.momCorpArea = new Group(image, adjacentArea, officeName);
+        this.momCorpArea = new Group(imageView, adjacentArea, officeName);
     }
     public void addRobotSanta(RobotSanta newRobotSanta) {
         robotSantas.add(newRobotSanta);
@@ -68,20 +68,20 @@ public class MomFriendlyRobots {
         this.robotSantas = robotSantas;
     }
 
-    public double getxPosition() {
-        return xPosition;
+    public double getPosX() {
+        return posX;
     }
 
-    public void setxPosition(double xPosition) {
-        this.xPosition = xPosition;
+    public void setPosX(double posX) {
+        this.posX = posX;
     }
 
-    public double getyPosition() {
-        return yPosition;
+    public double getPosY() {
+        return posY;
     }
 
-    public void setyPosition(double yPosition) {
-        this.yPosition = yPosition;
+    public void setPosY(double posY) {
+        this.posY = posY;
     }
 
     public double getWidth() {
@@ -92,12 +92,12 @@ public class MomFriendlyRobots {
         return height;
     }
 
-    public ImageView getImage() {
-        return image;
+    public ImageView getImageView() {
+        return imageView;
     }
 
-    public void setImage(ImageView image) {
-        this.image = image;
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
     public Rectangle getAdjacentArea() {

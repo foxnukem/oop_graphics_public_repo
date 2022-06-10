@@ -5,8 +5,8 @@
 
 <AnchorPane prefHeight="264.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.oop_graphics.InsertController">
       <Pane prefHeight="276.0" prefWidth="323.0">
-            <Button fx:id="addButton" layoutX="241.0" layoutY="237.0" mnemonicParsing="false" text="Додати" />
-            <TextField layoutX="34.0" layoutY="30.0" promptText="Координата X" fx:id="posX" />
+            <Button fx:id="addButton" layoutX="241.0" layoutY="237.0" mnemonicParsing="false" text="Додати" onAction="#add"/>
+            <TextField fx:id="posX" layoutX="34.0" layoutY="30.0" promptText="Координата X"  />
             <TextField fx:id="posY" layoutX="34.0" layoutY="69.0" promptText="Координата Y" />
             <ChoiceBox fx:id="classType" layoutX="147.0" layoutY="126.0" prefWidth="150.0" />
             <CheckBox fx:id="isActive" layoutX="34.0" layoutY="170.0" mnemonicParsing="false" text="Active" />

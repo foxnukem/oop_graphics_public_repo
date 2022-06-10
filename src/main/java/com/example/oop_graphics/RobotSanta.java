@@ -25,19 +25,17 @@ public class RobotSanta extends Fry {
     public RobotSanta(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         this.isBad = true;
-        this.width = 54;
-        this.height = 70;
         try {
             this.image = new ImageView(new Image(new File("src/images/santa.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.microGroup = new Group(image, health, transformedDevices, border);
-        this.microGroup.setLayoutX(this.posX);
-        this.microGroup.setLayoutY(this.posY);
-        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            super.activateDeactivateBorder();
-        });
+        this.microGroup.getChildren().removeAll(this.microGroup.getChildren());
+        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border);
+    }
+    public RobotSanta(double initialPosX, double initialPosY, boolean isActive) {
+        this("Санта", initialPosX, initialPosY);
+        this.setActive(isActive);
     }
     public RobotSanta() {
         this("Робот Санта", 1300, 1000);

@@ -19,6 +19,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final int regenerateRate = 10;
 
     protected String name;
+    protected long id;
     protected boolean isBad;
     protected boolean isActive;
     protected int healthValue;
@@ -67,6 +68,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     public Nibblonian(String name, double initialPosX, double initialPosY) {
         this.name = name;
+        this.id = Main.startId++;
         this.healthValue = Nibblonian.initialHealthValue;
         this.distanceTravelled = 0.0;
         this.devices = new ArrayList<>();
@@ -99,17 +101,17 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.transformedDevices.setX(5);
         this.transformedDevices.setY(10);
 
-
-        this.microGroup = new Group(image, health, transformedDevices, border);
+        this.microGroup = new Group(health, transformedDevices, border);
+        this.microGroup.getChildren().add(image);
         this.microGroup.setLayoutX(this.posX);
         this.microGroup.setLayoutY(this.posY);
-        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            activateDeactivateBorder();
-        });
-
-
+        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> activateDeactivateBorder());
     }
 
+    public Nibblonian(double initialPosX, double initialPosY, boolean isActive) {
+        this("Жуйка", initialPosX, initialPosY);
+        this.setActive(isActive);
+    }
     public Nibblonian() {
         this("Жуйка", 1000, 1000);
     }
@@ -134,9 +136,12 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
 
     public void setActive(boolean active) {
         isActive = active;
+        if (isActive) {
+            activate();
+        }
     }
 
-    public void activateDeactivateBorder() {
+    private void activateDeactivateBorder() {
         this.isActive = !this.isActive;
         if (this.isActive) {
             this.border.setOpacity(1);
@@ -148,6 +153,10 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void cancelActivation() {
         this.isActive = false;
         this.border.setOpacity(0);
+    }
+    public void activate() {
+        this.isActive = true;
+        this.border.setOpacity(1);
     }
     public double getPosX() {
         return posX;
@@ -268,7 +277,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         System.out.println(this);
     }
 
-    public ImageView getImage() {
+    public ImageView getImageView() {
         return image;
     }
 

@@ -27,6 +27,8 @@ public class Device {
     protected double height;
     protected ImageView image;
     protected Circle border;
+    protected Group macroGroup;
+
 
     public Group getMacroGroup() {
         return macroGroup;
@@ -35,8 +37,6 @@ public class Device {
     public void setMacroGroup(Group macroGroup) {
         this.macroGroup = macroGroup;
     }
-
-    protected Group macroGroup;
     public Device() {
         this.status = DeviceStatus.UNDEFINED;
 

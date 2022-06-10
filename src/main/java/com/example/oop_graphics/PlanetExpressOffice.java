@@ -12,46 +12,46 @@ import java.util.ArrayList;
 
 public class PlanetExpressOffice {
     private ArrayList<Nibblonian> teamMembers;
-    private double xPosition;
-    private double yPosition;
+    private double posX;
+    private double posY;
     private final double width;
     private final double height;
-    private ImageView image;
+    private ImageView imageView;
     private Rectangle adjacentArea;
     private Text officeName;
-    private Group planetExpressArea;
+    private final Group planetExpressArea;
 
     public PlanetExpressOffice() {
         teamMembers = new ArrayList<>();
-        this.xPosition = 15;
-        this.yPosition = 610;
+        this.posX = 15;
+        this.posY = 610;
         this.width = 445;
         this.height = 510;
 
         this.officeName = new Text("Planet Express");
         this.officeName.setFont(new Font("Monako", 20));
         this.officeName.setFill(Color.WHITE);
-        this.officeName.setX(this.xPosition + 10);
-        this.officeName.setY(this.yPosition + 25);
+        this.officeName.setX(this.posX + 10);
+        this.officeName.setY(this.posY + 25);
         try {
-            this.image = new ImageView(new File("src/images/planetexpress.png").toURI().toString());
+            this.imageView = new ImageView(new File("src/images/planetexpress.png").toURI().toString());
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.image.setFitWidth(this.width);
-        this.image.setFitHeight(this.height - 110);
-        this.image.setX(this.xPosition);
-        this.image.setY(this.yPosition + 30);
+        this.imageView.setFitWidth(this.width);
+        this.imageView.setFitHeight(this.height - 110);
+        this.imageView.setX(this.posX);
+        this.imageView.setY(this.posY + 30);
 
         this.adjacentArea = new Rectangle(this.width, this.height);
         this.adjacentArea.setFill(Color.rgb(182, 216, 155));
         this.adjacentArea.setOpacity(0.4);
-        this.adjacentArea.setX(this.xPosition);
-        this.adjacentArea.setY(this.yPosition);
+        this.adjacentArea.setX(this.posX);
+        this.adjacentArea.setY(this.posY);
         this.adjacentArea.setArcHeight(40);
         this.adjacentArea.setArcWidth(40);
 
-        this.planetExpressArea = new Group(image, adjacentArea, officeName);
+        this.planetExpressArea = new Group(imageView, adjacentArea, officeName);
     }
     public void addTeamMember(Nibblonian newTeamMember) {
         if (!newTeamMember.isBad()) {
@@ -70,28 +70,34 @@ public class PlanetExpressOffice {
         this.teamMembers = teamMembers;
     }
 
-    public double getxPosition() {
-        return xPosition;
+    public double getPosX() {
+        return posX;
     }
 
-    public void setxPosition(double xPosition) {
-        this.xPosition = xPosition;
+    public void setPosX(double posX) {
+        this.posX = posX;
     }
 
-    public double getyPosition() {
-        return yPosition;
+    public double getPosY() {
+        return posY;
     }
 
-    public void setyPosition(double yPosition) {
-        this.yPosition = yPosition;
+    public void setPosY(double posY) {
+        this.posY = posY;
     }
 
-    public ImageView getImage() {
-        return image;
+    public double getWidth() {
+        return width;
+    }
+    public double getHeight() {
+        return height;
+    }
+    public ImageView getImageView() {
+        return imageView;
     }
 
-    public void setImage(ImageView image) {
-        this.image = image;
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
     public Rectangle getAdjacentArea() {
@@ -114,7 +120,4 @@ public class PlanetExpressOffice {
         return planetExpressArea;
     }
 
-    public void setPlanetExpressArea(Group planetExpressArea) {
-        this.planetExpressArea = planetExpressArea;
-    }
 }

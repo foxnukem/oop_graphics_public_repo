@@ -1,21 +1,25 @@
 package com.example.oop_graphics;
 
+import com.almasb.fxgl.ui.property.DoublePropertyView;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.InputEvent;
+import javafx.stage.Stage;
 
+import javax.crypto.spec.PSource;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 
 public class InsertController implements Initializable {
     @FXML
-    private TextField xPosition;
+    private TextField posX;
     @FXML
-    private TextField yPosition;
+    private TextField posY;
     @FXML
     private ChoiceBox<String> classType;
     private final String[] classTypes = {"Nibblonian", "Fry", "RobotBender", "RobotSanta"};
@@ -27,5 +31,36 @@ public class InsertController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         classType.getItems().addAll(classTypes);
+    }
+    public void add(ActionEvent event) {
+        Random random = new Random(System.currentTimeMillis());
+        double objectPosX, objectPosY;
+        try {
+            objectPosX = Double.parseDouble(posX.getText());
+        } catch (NumberFormatException e) {
+            objectPosX = Math.abs(random.nextDouble(Main.getViewportWidth()));
+        }
+        try {
+            objectPosY = Double.parseDouble(posY.getText());
+        } catch (NumberFormatException e) {
+            objectPosY = Math.abs(random.nextDouble(Main.getViewPortHeight()));
+        }
+        boolean isObjectActive = isActive.isSelected();
+
+        if (classType.getValue() == null) {
+            Alert noChosenClass = new Alert(Alert.AlertType.INFORMATION);
+            noChosenClass.setTitle("Помилка");
+            noChosenClass.setHeaderText(null);
+            noChosenClass.setContentText("Оберіть у випадному меню клас нового мікрооб'єкта");
+            noChosenClass.showAndWait();
+        }
+        switch (classType.getValue()) {
+            case "Nibblonian" -> Main.getWorld().addCitizen(new Nibblonian(objectPosX, objectPosY, isObjectActive));
+            case "Fry" -> Main.getWorld().addCitizen(new Fry(objectPosX, objectPosY, isObjectActive));
+            case "RobotBender" -> Main.getWorld().addCitizen(new RobotBender(objectPosX, objectPosY, isObjectActive));
+            case "RobotSanta" -> Main.getWorld().addCitizen(new RobotSanta(objectPosX, objectPosY, isObjectActive));
+        }
+        Stage stage = (Stage) addButton.getScene().getWindow();
+        stage.close();
     }
 }

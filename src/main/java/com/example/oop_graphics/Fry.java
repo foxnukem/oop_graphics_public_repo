@@ -25,22 +25,18 @@ public class Fry extends Nibblonian {
 
     public Fry(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
-        this.width = 54;
-        this.height = 70;
         try {
             this.image = new ImageView(new Image(new File("src/images/fry.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-
-        this.microGroup = new Group(image, health, transformedDevices, border);
-        this.microGroup.setLayoutX(this.posX);
-        this.microGroup.setLayoutY(this.posY);
-        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            activateDeactivateBorder();
-        });
+        this.microGroup.getChildren().removeAll(this.microGroup.getChildren());
+        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border);
     }
-
+    public Fry(double initialPosX, double initialPoxY, boolean isActive) {
+        this("Фрай", initialPosX, initialPoxY);
+        this.setActive(isActive);
+    }
     public Fry() {
         this("Фрай", 1100, 1000);
     }
