@@ -12,6 +12,8 @@ public class RobotBender extends Fry {
     private static final int initialHealthValue = 200;
     private static final int hurtRate = 5;
     private static final int regenerateRate = 10;
+    private static final double step = 15.0;
+    private static final double speed = 0.0;
 
     public int getInitialHealthValue() {
         return initialHealthValue;
@@ -21,6 +23,12 @@ public class RobotBender extends Fry {
     }
     public int getRegenerateRate() {
         return regenerateRate;
+    }
+    public double getStep() {
+        return step;
+    }
+    public double getSpeed() {
+        return speed;
     }
     public RobotBender(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);

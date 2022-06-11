@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 public class MomFriendlyRobots {
     private ArrayList<RobotSanta> robotSantas;
-    private double posX;
-    private double posY;
+    private final double posX;
+    private final double posY;
     private final double width;
     private final double height;
     private ImageView imageView;
@@ -21,14 +21,14 @@ public class MomFriendlyRobots {
     private Text officeName;
     private Group momCorpArea;
 
-    public MomFriendlyRobots() {
-        this.robotSantas = new ArrayList<>();
-
+    {
         this.posX = 3765;
         this.posY = 2335;
         this.width = 225;
         this.height = 409;
-
+    }
+    public MomFriendlyRobots() {
+        this.robotSantas = new ArrayList<>();
         this.officeName = new Text("Mom Friendly Robots");
         this.officeName.setFont(new Font("Monako", 20));
         this.officeName.setFill(Color.WHITE);
@@ -67,31 +67,18 @@ public class MomFriendlyRobots {
     public void setRobotSantas(ArrayList<RobotSanta> robotSantas) {
         this.robotSantas = robotSantas;
     }
-
     public double getPosX() {
         return posX;
     }
-
-    public void setPosX(double posX) {
-        this.posX = posX;
-    }
-
     public double getPosY() {
         return posY;
     }
-
-    public void setPosY(double posY) {
-        this.posY = posY;
-    }
-
     public double getWidth() {
         return width;
     }
-
     public double getHeight() {
         return height;
     }
-
     public ImageView getImageView() {
         return imageView;
     }

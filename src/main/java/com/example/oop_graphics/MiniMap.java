@@ -37,16 +37,11 @@ public class MiniMap {
         deviceGroups = new HashMap<>();
     }
     public MiniMap(PlanetExpressOffice planetExpressOffice, MomFriendlyRobots momFriendlyRobots) {
-
         this.pane = new Pane();
         this.pane.setMinSize(miniMapWidth, miniMapHeight);
         this.pane.setPrefSize(miniMapWidth, miniMapHeight);
         this.pane.setMaxSize(miniMapWidth, miniMapHeight);
 
-        //TODO fix Planet Express Building group snapshotting
-//        SnapshotParameters parameters = new SnapshotParameters();
-//        parameters.setFill(Color.TRANSPARENT);
-//        planetExpressOfficeThumbnail = new ImageView(planetExpressOffice.getPlanetExpressArea().snapshot(new SnapshotParameters(), null));
         planetExpressOfficeThumbnail = new ImageView(planetExpressOffice.getImageView().getImage());
         planetExpressOfficeThumbnail.setLayoutX(planetExpressOffice.getPosX() * scale.getX());
         planetExpressOfficeThumbnail.setLayoutY(planetExpressOffice.getPosY() * scale.getY());
@@ -84,9 +79,12 @@ public class MiniMap {
         citizensMap.get(citizen).setPreserveRatio(true);
         citizensMap.get(citizen).setFitHeight(citizen.getHeight() * scale.getY());
         pane.getChildren().add(citizensMap.get(citizen));
+        updateMiniMap();
     }
     public void removeCitizenFromMiniMap(Nibblonian citizen) {
         pane.getChildren().remove(citizensMap.get(citizen));
+        citizensMap.remove(citizen);
+        updateMiniMap();
     }
     public void addDeviceToMiniMap(Device device) {
 

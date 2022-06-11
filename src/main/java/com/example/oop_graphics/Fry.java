@@ -12,6 +12,8 @@ public class Fry extends Nibblonian {
     private static final int initialHealthValue = 150;
     private static final int hurtRate = 3;
     private static final int regenerateRate = 8;
+    private static final double step = 10.0;
+    private static final double speed = 0.0;
 
     public int getInitialHealthValue() {
         return initialHealthValue;
@@ -21,6 +23,12 @@ public class Fry extends Nibblonian {
     }
     public int getRegenerateRate() {
         return regenerateRate;
+    }
+    public double getStep() {
+        return step;
+    }
+    public double getSpeed() {
+        return speed;
     }
 
     public Fry(String name, double initialPosX, double initialPosY) {
