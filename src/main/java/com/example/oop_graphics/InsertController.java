@@ -54,12 +54,17 @@ public class InsertController implements Initializable {
             noChosenClass.setContentText("Оберіть у випадному меню клас нового мікрооб'єкта");
             noChosenClass.showAndWait();
         }
-        switch (classType.getValue()) {
-            case "Nibblonian" -> Main.getWorld().addCitizen(new Nibblonian(objectPosX, objectPosY, isObjectActive));
-            case "Fry" -> Main.getWorld().addCitizen(new Fry(objectPosX, objectPosY, isObjectActive));
-            case "RobotBender" -> Main.getWorld().addCitizen(new RobotBender(objectPosX, objectPosY, isObjectActive));
-            case "RobotSanta" -> Main.getWorld().addCitizen(new RobotSanta(objectPosX, objectPosY, isObjectActive));
+
+        if (classType.getValue() != null && classType.getValue().equals("Nibblonian")) {
+            Main.getWorld().addCitizen(new Nibblonian(objectPosX, objectPosY, isObjectActive));
+        } else if (classType.getValue() != null && classType.getValue().equals("Fry")) {
+            Main.getWorld().addCitizen(new Fry(objectPosX, objectPosY, isObjectActive));
+        } else if (classType.getValue() != null && classType.getValue().equals("RobotBender")) {
+            Main.getWorld().addCitizen(new RobotBender(objectPosX, objectPosY, isObjectActive));
+        } else if (classType.getValue() != null && classType.getValue().equals("RobotSanta")) {
+            Main.getWorld().addCitizen(new RobotSanta(objectPosX, objectPosY, isObjectActive));
         }
+
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
     }
