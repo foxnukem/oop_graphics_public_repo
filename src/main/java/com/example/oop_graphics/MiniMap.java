@@ -17,6 +17,10 @@ public class MiniMap {
     private static double miniMapHeight;
     private static double miniMapWidth;
 
+    public HashMap<Nibblonian, ImageView> getCitizensMap() {
+        return citizensMap;
+    }
+
     private final HashMap<Nibblonian, ImageView> citizensMap;
     private final HashMap<Device, ImageView> deviceGroups;
     private final ImageView planetExpressOfficeThumbnail;
@@ -32,11 +36,9 @@ public class MiniMap {
         miniMapHeight = NewNewYork.getRootHeight() * scale.getX();
         miniMapWidth = NewNewYork.getRootWidth() * scale.getY();
     }
-    {
+    public MiniMap(PlanetExpressOffice planetExpressOffice, MomFriendlyRobots momFriendlyRobots) {
         citizensMap = new HashMap<>();
         deviceGroups = new HashMap<>();
-    }
-    public MiniMap(PlanetExpressOffice planetExpressOffice, MomFriendlyRobots momFriendlyRobots) {
         this.pane = new Pane();
         this.pane.setMinSize(miniMapWidth, miniMapHeight);
         this.pane.setPrefSize(miniMapWidth, miniMapHeight);
@@ -70,9 +72,7 @@ public class MiniMap {
     }
 
     public void addCitizenToMiniMap(Nibblonian citizen) {
-        SnapshotParameters parameters = new SnapshotParameters();
-        parameters.setFill(Color.TRANSPARENT);
-        ImageView citizenThumbnail = new ImageView(citizen.getMicroGroup().snapshot(parameters, null));
+        ImageView citizenThumbnail = new ImageView(citizen.getImageView().getImage());
         citizensMap.put(citizen, citizenThumbnail);
         citizensMap.get(citizen).setLayoutX(citizen.getPosX() * scale.getX());
         citizensMap.get(citizen).setLayoutY(citizen.getPosY() * scale.getY());
@@ -84,7 +84,6 @@ public class MiniMap {
     public void removeCitizenFromMiniMap(Nibblonian citizen) {
         pane.getChildren().remove(citizensMap.get(citizen));
         citizensMap.remove(citizen);
-        updateMiniMap();
     }
     public void addDeviceToMiniMap(Device device) {
 
@@ -159,5 +158,8 @@ public class MiniMap {
 
     public void setMiniMapBackground(Image miniMapBackground) {
         this.miniMapBackground = miniMapBackground;
+    }
+    public static Scale getScale() {
+        return scale;
     }
 }

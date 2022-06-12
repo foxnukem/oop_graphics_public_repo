@@ -8,7 +8,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.io.File;
-import java.security.spec.ECField;
 import java.util.Objects;
 
 public class Device {
@@ -21,8 +20,9 @@ public class Device {
     }
     private final Text statusInText;
     private DeviceStatus status;
-    protected double xPosition;
-    protected double yPosition;
+    private long id;
+    protected double posX;
+    protected double posY;
     protected double width;
     protected double height;
     protected ImageView image;
@@ -40,8 +40,8 @@ public class Device {
     public Device() {
         this.status = DeviceStatus.UNDEFINED;
 
-        this.xPosition = 1500;
-        this.yPosition = 1000;
+        this.posX = 1500;
+        this.posY = 1000;
         this.width = 200;
         this.height = 200;
         try {
@@ -52,13 +52,13 @@ public class Device {
         this.image.setFitWidth(this.width - 50);
         this.image.setFitHeight(this.height - 50);
 
-        this.border = new Circle(this.xPosition + this.width / 2, this.yPosition + this.height / 2, this.width / 2, Color.GRAY);
+        this.border = new Circle(this.posX + this.width / 2, this.posY + this.height / 2, this.width / 2, Color.GRAY);
         this.border.setOpacity(0.3);
 
         this.statusInText = new Text(this.status.toString());
         this.macroGroup = new Group(image, border, statusInText);
-        this.macroGroup.setLayoutX(this.xPosition);
-        this.macroGroup.setLayoutY(this.yPosition);
+        this.macroGroup.setLayoutX(this.posX);
+        this.macroGroup.setLayoutY(this.posY);
 
     }
     public boolean setStatus(Nibblonian nibblonian, DeviceStatus status) {
@@ -107,7 +107,7 @@ public class Device {
     }
     @Override
     public int hashCode() {
-        return Objects.hash(statusInText, status, xPosition, yPosition, width, height, image, border, macroGroup);
+        return Objects.hash(statusInText, status, posX, posY, width, height, image, border, macroGroup);
     }
 
     @Override

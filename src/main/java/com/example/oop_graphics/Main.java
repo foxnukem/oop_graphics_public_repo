@@ -16,10 +16,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Main extends Application {
     public static long startId = 1000;
+    public static long deviceStartId = 100;
     //TODO set viewport to fullHD and add setMaximized(true) to stage
     private final static int viewPortWidth = 1600;
     private final static int viewPortHeight = 900;
@@ -33,7 +36,8 @@ public class Main extends Application {
     private static double scrollY;
     private final static Pane infoPane = new Pane();
     private static boolean infoEnabled = false;
-    private static Nibblonian microObjectForInfoPane;
+
+    private static ArrayList<Nibblonian> microObjectsForInfoPane;
     private final static NewNewYork newNewYork = new NewNewYork(10);
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
@@ -50,35 +54,35 @@ public class Main extends Application {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         group.getChildren().addAll(scrollPane, newNewYork.getMiniMap().getPane(), infoPane);
-        group.setAlignment(scrollPane, Pos.TOP_LEFT);
-        group.setAlignment(newNewYork.getMiniMap().getPane(), Pos.TOP_RIGHT);
-        group.setAlignment(infoPane, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(scrollPane, Pos.TOP_LEFT);
+        StackPane.setAlignment(newNewYork.getMiniMap().getPane(), Pos.TOP_RIGHT);
+        StackPane.setAlignment(infoPane, Pos.BOTTOM_RIGHT);
         infoPane.toBack();
         scene = new Scene(group, viewPortWidth, viewPortHeight);
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             //TODO create working methods for move, with different step
             for (Nibblonian n : newNewYork.getCitizens()) {
-                if (n.isActive()) {
+                if (n.isActive() && !keyEvent.isControlDown()) {
                     // Move left
                     if (keyEvent.getCode() == KeyCode.H) {
-                        n.getMicroGroup().setLayoutX(n.getMicroGroup().getLayoutX() - 3);
+                        n.moveLeft();
                     }
                     // Move down
                     if (keyEvent.getCode() == KeyCode.J) {
-                        n.getMicroGroup().setLayoutY(n.getMicroGroup().getLayoutY() + 3);
+                        n.moveDown();
                     }
                     // Move up
                     if (keyEvent.getCode() == KeyCode.K) {
-                        n.getMicroGroup().setLayoutY(n.getMicroGroup().getLayoutY() - 3);
+                        n.moveUp();
                     }
                     // Move right
                     if (keyEvent.getCode() == KeyCode.L) {
-                        n.getMicroGroup().setLayoutX(n.getMicroGroup().getLayoutX() + 3);
+                        n.moveRight();
                     }
                     // Delete activated
                     if (keyEvent.getCode() == KeyCode.DELETE) {
-
+                        newNewYork.removeCitizen(n);
                     }
                     // Cancel activation
                     if (keyEvent.getCode() == KeyCode.ESCAPE) {
@@ -87,13 +91,13 @@ public class Main extends Application {
                 }
             }
             // Move quicker
-            if (keyEvent.getCode() == KeyCode.Y) {
-
-            }
+//            if (keyEvent.getCode() == KeyCode.Y) {
+//
+//            }
             // Move slower
-            if (keyEvent.getCode() == KeyCode.U) {
-
-            }
+//            if (keyEvent.getCode() == KeyCode.U) {
+//
+//            }
             // Dialog for adding microobjects
             if (keyEvent.getCode() == KeyCode.INSERT) {
                 try {

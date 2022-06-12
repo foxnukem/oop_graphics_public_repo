@@ -7,11 +7,14 @@ import javafx.scene.input.MouseEvent;
 
 
 import java.io.File;
+import java.util.Objects;
 
 public class RobotSanta extends Fry {
     private static final int initialHealthValue = 200;
     private static final int hurtRate = 10;
     private static final int regenerateRate = 10;
+    private static final double step = 15.0;
+    private static final double speed = 0.0;
 
     public int getInitialHealthValue() {
         return initialHealthValue;
@@ -22,6 +25,12 @@ public class RobotSanta extends Fry {
     public int getRegenerateRate() {
         return regenerateRate;
     }
+    public double getStep() {
+        return step;
+    }
+    public double getSpeed() {
+        return speed;
+    }
     public RobotSanta(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         this.isBad = true;
@@ -31,7 +40,7 @@ public class RobotSanta extends Fry {
             System.out.println("Error");
         }
         this.microGroup.getChildren().removeAll(this.microGroup.getChildren());
-        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border);
+        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border, this.objectId);
     }
     public RobotSanta(double initialPosX, double initialPosY, boolean isActive) {
         this("Санта", initialPosX, initialPosY);
@@ -55,27 +64,25 @@ public class RobotSanta extends Fry {
             nibblonian.getHurt();
         }
     }
-    @Override
-    public boolean equals(Object compared) {
-        if (this == compared)
-            return true;
-        if (!(compared instanceof RobotSanta comparedRobotSanta))
-            return false;
-        return this.name.equals(comparedRobotSanta.name) &&
-                this.isBad == comparedRobotSanta.isBad &&
-                this.healthValue == comparedRobotSanta.healthValue &&
-                this.distanceTravelled == comparedRobotSanta.distanceTravelled &&
-                this.devices.equals(comparedRobotSanta.devices);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof RobotSanta)) return false;
+//        RobotSanta that = (RobotSanta) o;
+//        return id == that.id && isBad == that.isBad && isActive == that.isActive && healthValue == that.healthValue && Double.compare(that.distanceTravelled, distanceTravelled) == 0 && Double.compare(that.posX, posX) == 0 && Double.compare(that.posY, posY) == 0 && Double.compare(that.width, width) == 0 && Double.compare(that.height, height) == 0 && Objects.equals(name, that.name) && Objects.equals(devices, that.devices) && Objects.equals(image, that.image) && Objects.equals(health, that.health) && Objects.equals(border, that.border) && Objects.equals(transformedDevices, that.transformedDevices) && Objects.equals(microGroup, that.microGroup);
+//    }
     @Override
     public String toString() {
         return "RobotSanta{" +
                 "name='" + name + '\'' +
+                ", id=" + id +
                 ", isBad=" + isBad +
+                ", isActive=" + isActive +
                 ", healthValue=" + healthValue +
                 ", distanceTravelled=" + distanceTravelled +
-                ", numberOfTransformedDevices=" + devices.size() +
                 ", devices=" + devices +
+                ", posX=" + posX +
+                ", posY=" + posY +
                 '}';
     }
 }

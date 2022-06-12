@@ -17,6 +17,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final int initialHealthValue = 100;
     private static final int hurtRate = 2;
     private static final int regenerateRate = 10;
+    private static final double step = 7.0;
+    private static final double speed = 0.0;
+
 
     protected String name;
     protected long id;
@@ -34,10 +37,43 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     protected Line health;
     protected Rectangle border;
     protected Text transformedDevices;
+    protected Text objectId;
     protected Group microGroup;
 
-    public void move(double x, double y) {
+    protected void moveTo(double x, double y) {
 
+    }
+    public void moveUp() {
+        this.posY -= getStep();
+        if (this.posY <= 0.0) {
+            this.posY = 0.0;
+        }
+        this.setPosY(this.posY);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
+    }
+    public void moveDown() {
+        this.posY += getStep();
+        if (this.posY >= NewNewYork.getRootHeight() - this.height) {
+            this.posY = NewNewYork.getRootHeight() - this.height;
+        }
+        this.setPosY(this.posY);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
+    }
+    public void moveLeft() {
+        this.posX -= getStep();
+        if (this.posX <= 0.0) {
+            this.posX = 0.0;
+        }
+        this.setPosX(this.posX);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
+    }
+    public void moveRight() {
+        this.posX += getStep();
+        if (this.posX >= NewNewYork.getRootWidth() - this.width) {
+            this.posX = NewNewYork.getRootWidth() - this.width;
+        }
+        this.setPosX(this.posX);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
     }
     protected void markDeviceAsSafe(Device device) {
         if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.SAFE)) {
@@ -69,11 +105,12 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public Nibblonian(String name, double initialPosX, double initialPosY) {
         this.name = name;
         this.id = Main.startId++;
-        this.healthValue = Nibblonian.initialHealthValue;
+        this.healthValue = getInitialHealthValue();
         this.distanceTravelled = 0.0;
         this.devices = new ArrayList<>();
         this.isBad = false;
         this.transformedDevices = new Text("0");
+        this.objectId = new Text(Long.toString(id));
 
         this.posX = initialPosX;
         this.posY = initialPosY;
@@ -85,7 +122,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             System.out.println("Error");
         }
         this.border = new Rectangle(0, 0, this.width, this.height);
-        this.border.setStrokeWidth(3);
+        this.border.setStrokeWidth(6.5);
         this.border.setFill(Color.TRANSPARENT);
         this.border.setStroke(Color.PURPLE);
         this.border.setOpacity(0);
@@ -101,7 +138,12 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.transformedDevices.setX(5);
         this.transformedDevices.setY(10);
 
-        this.microGroup = new Group(health, transformedDevices, border);
+        this.objectId.setX(30);
+        this.objectId.setY(5);
+        this.objectId.setFill(Color.AZURE);
+        this.objectId.setOpacity(0);
+
+        this.microGroup = new Group(health, transformedDevices, border, objectId);
         this.microGroup.getChildren().add(image);
         this.microGroup.setLayoutX(this.posX);
         this.microGroup.setLayoutY(this.posY);
@@ -144,19 +186,42 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private void activateDeactivateBorder() {
         this.isActive = !this.isActive;
         if (this.isActive) {
-            this.border.setOpacity(1);
+            activate();
         }
         if (!this.isActive) {
-            this.border.setOpacity(0);
+            cancelActivation();
         }
     }
     public void cancelActivation() {
         this.isActive = false;
         this.border.setOpacity(0);
+        this.objectId.setOpacity(0);
     }
     public void activate() {
         this.isActive = true;
         this.border.setOpacity(1);
+        this.objectId.setOpacity(1);
+    }
+    //TODO make to work this damn method (btw Cloning)
+    public void respawn() {
+        double posXOfOffice = Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth();
+        double posYOfOffice = Main.getWorld().getPlanetExpressOffice().getPosY();
+        Nibblonian n;
+        try {
+            n = this.clone();
+            n.setPosX(posXOfOffice);
+            n.setPosY(posYOfOffice);
+            while (n.getHealthValue() < getInitialHealthValue()) {
+                n.regenerate();
+            }
+            n.setName("Клон " + n.getName());
+            System.out.println(Main.getWorld().getCitizens());
+            Main.getWorld().removeCitizen(this);
+            Main.getWorld().addCitizen(n);
+            System.out.println("\n" + Main.getWorld().getCitizens());
+        } catch (CloneNotSupportedException e) {
+            System.out.println("Клонування не відбулось");
+        }
     }
     public double getPosX() {
         return posX;
@@ -164,6 +229,8 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
 
     public void setPosX(double posX) {
         this.posX = posX;
+        this.microGroup.setLayoutX(posX);
+
     }
 
     public double getPosY() {
@@ -172,6 +239,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
 
     public void setPosY(double posY) {
         this.posY = posY;
+        this.microGroup.setLayoutY(posY);
     }
 
     public double getWidth() {
@@ -223,6 +291,12 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public int getRegenerateRate() {
         return regenerateRate;
     }
+    public double getStep() {
+        return step;
+    }
+    public double getSpeed() {
+        return speed;
+    }
 
     @Override
     public int compareTo(Nibblonian n) {
@@ -237,38 +311,41 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         }
         return 0;
     }
+
     @Override
-    public boolean equals(Object compared) {
-        if (this == compared)
-            return true;
-        if (!(compared instanceof Nibblonian comparedNibblonian))
-            return false;
-        return this.name.equals(comparedNibblonian.name) &&
-                this.isBad == comparedNibblonian.isBad &&
-                this.healthValue == comparedNibblonian.healthValue &&
-                this.distanceTravelled == comparedNibblonian.distanceTravelled &&
-                this.devices.equals(comparedNibblonian.devices);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Nibblonian that)) return false;
+        return id == that.id && isBad == that.isBad && isActive == that.isActive && healthValue == that.healthValue && Double.compare(that.distanceTravelled, distanceTravelled) == 0 && Double.compare(that.posX, posX) == 0 && Double.compare(that.posY, posY) == 0 && Double.compare(that.width, width) == 0 && Double.compare(that.height, height) == 0 && Objects.equals(name, that.name) && Objects.equals(devices, that.devices) && Objects.equals(image, that.image) && Objects.equals(health, that.health) && Objects.equals(border, that.border) && Objects.equals(transformedDevices, that.transformedDevices) && Objects.equals(microGroup, that.microGroup);
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash(name, healthValue, distanceTravelled, devices);
+        return Objects.hash(name, id, isBad, image);
     }
+
     @SuppressWarnings("unchecked")
     @Override
     public Nibblonian clone() throws CloneNotSupportedException {
         Nibblonian clone = (Nibblonian) super.clone();
         clone.devices = (ArrayList<Device>) this.devices.clone();
+        clone.isActive = this.isActive;
+        clone.microGroup = this.microGroup;
         return clone;
     }
+
     @Override
     public String toString() {
         return "Nibblonian{" +
                 "name='" + name + '\'' +
+                ", id=" + id +
                 ", isBad=" + isBad +
+                ", isActive=" + isActive +
                 ", healthValue=" + healthValue +
                 ", distanceTravelled=" + distanceTravelled +
-                ", numberOfTransformedDevices=" + devices.size() +
                 ", devices=" + devices +
+                ", posX=" + posX +
+                ", posY=" + posY +
                 '}';
     }
     // print() method
