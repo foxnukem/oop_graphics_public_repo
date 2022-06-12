@@ -20,7 +20,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final double step = 7.0;
     private static final double speed = 0.0;
 
-
     protected String name;
     protected long id;
     protected boolean isBad;
