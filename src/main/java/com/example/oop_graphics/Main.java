@@ -54,6 +54,7 @@ public class Main extends Application {
         newNewYork.getCitizens().get(2).interactWithMacro(newNewYork.getDevices().get(0));
 
         initInfoPane();
+
         scrollPane.setPannable(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
