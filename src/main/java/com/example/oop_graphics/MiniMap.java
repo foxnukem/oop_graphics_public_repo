@@ -4,6 +4,8 @@ import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -20,6 +22,7 @@ public class MiniMap {
     private final static Scale scale;
     private static double miniMapHeight;
     private static double miniMapWidth;
+    private static boolean isTransparent;
 
     public HashMap<Nibblonian, ImageView> getCitizensMap() {
         return citizensMap;
@@ -27,6 +30,7 @@ public class MiniMap {
 
     private final HashMap<Nibblonian, ImageView> citizensMap;
     private final HashMap<Device, Group> deviceGroups;
+    private final HashMap<Device, Circle> devicesCircles;
     private final ImageView planetExpressOfficeThumbnail;
     private final ImageView momFriendlyRobotsThumbnail;
     private Pane pane;
@@ -41,10 +45,12 @@ public class MiniMap {
         scale = new Scale(0.1, 0.1);
         miniMapHeight = NewNewYork.getRootHeight() * scale.getX();
         miniMapWidth = NewNewYork.getRootWidth() * scale.getY();
+        isTransparent = false;
     }
     public MiniMap(PlanetExpressOffice planetExpressOffice, MomFriendlyRobots momFriendlyRobots) {
         citizensMap = new HashMap<>();
         deviceGroups = new HashMap<>();
+        devicesCircles = new HashMap<>();
         this.pane = new Pane();
         this.pane.setMinSize(miniMapWidth, miniMapHeight);
         this.pane.setPrefSize(miniMapWidth, miniMapHeight);
@@ -75,6 +81,22 @@ public class MiniMap {
         this.mapArea.setStroke(Color.GREEN);
         this.mapArea.setStrokeWidth(2);
         this.pane.getChildren().addAll(container, planetExpressOfficeThumbnail, momFriendlyRobotsThumbnail, mapArea);
+
+        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                if (!isTransparent) {
+                    moveMapArea(mouseEvent.getX(), mouseEvent.getY());
+                }
+            }
+            if (mouseEvent.getButton() == MouseButton.MIDDLE) {
+                isTransparent = !isTransparent;
+                if (isTransparent) {
+                    this.pane.setOpacity(0);
+                } else {
+                    this.pane.setOpacity(1);
+                }
+            }
+        });
     }
 
     public void addCitizenToMiniMap(Nibblonian citizen) {
@@ -91,31 +113,47 @@ public class MiniMap {
         pane.getChildren().remove(citizensMap.get(citizen));
         citizensMap.remove(citizen);
     }
-    private Group getDeviceMiniGroup(Device device) {
+    public void addDeviceToMiniMap(Device device) {
         Circle miniBorder = new Circle((device.getPosX() + device.getWidth() / 2) * scale.getX(), (device.getPosY() + device.getHeight() / 2)* scale.getY(), (device.getWidth() / 2) * scale.getX(), device.getBorder().getFill());
+        miniBorder.setOpacity(0.5);
+        devicesCircles.put(device, miniBorder);
         ImageView imageView = new ImageView(device.getImage().getImage());
         imageView.setFitWidth((device.getWidth() - 50) * scale.getX());
         imageView.setFitHeight((device.getHeight() - 50) * scale.getY());
         imageView.setX((device.getPosX() + 25) * scale.getX());
         imageView.setY((device.getPosY() + 30) * scale.getY());
-        Group deviceMiniGroup = new Group(miniBorder, imageView);
+        Group deviceMiniGroup = new Group(devicesCircles.get(device), imageView);
         deviceMiniGroup.setLayoutX(device.getPosX() * scale.getX());
         deviceMiniGroup.setLayoutY(device.getPosY() * scale.getY());
-        return deviceMiniGroup;
-    }
-    public void addDeviceToMiniMap(Device device) {
-        deviceGroups.put(device, getDeviceMiniGroup(device));
+        deviceGroups.put(device, deviceMiniGroup);
         pane.getChildren().add(deviceGroups.get(device));
     }
     public void moveMapArea(double posX, double posY) {
+        if (posX < 0.5 * mapArea.getWidth()) {
+            mapArea.setX(0);
+            Main.getScrollPane().setHvalue(0);
+        } else if (posX > miniMapWidth - mapArea.getWidth() / 2) {
+            mapArea.setX(miniMapWidth - mapArea.getWidth());
+            Main.getScrollPane().setHvalue(1);
+        } else {
+            mapArea.setX(posX - mapArea.getWidth() / 2);
+            Main.getScrollPane().setHvalue(posX / pane.getWidth());
+        }
 
-    }
-    public void moveBigMapTo(double posX, double posY) {
-
+        if (posY < mapArea.getHeight() / 2) {
+            mapArea.setY(0);
+            Main.getScrollPane().setVvalue(0);
+        } else if (posY > miniMapHeight - mapArea.getHeight() / 2) {
+            mapArea.setY(miniMapHeight - mapArea.getHeight());
+            Main.getScrollPane().setVvalue(1);
+        } else {
+            mapArea.setY(posY - mapArea.getHeight() / 2);
+            Main.getScrollPane().setVvalue(posY / pane.getHeight());
+        }
     }
     public void updateMiniMap() {
         Pane temporaryPane = new Pane();
-        //TODO update colours of Devices
+        devicesCircles.forEach(((device, circle) -> circle.setFill(device.getBorder().getFill())));
         temporaryPane.getChildren().addAll(pane.getChildren());
         pane.getChildren().removeAll(pane.getChildren());
         pane.getChildren().addAll(temporaryPane.getChildren());

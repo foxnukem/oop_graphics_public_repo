@@ -22,9 +22,8 @@ import java.util.Objects;
 public class Main extends Application {
     public static long startId = 1000;
     public static long deviceStartId = 100;
-    //TODO set viewport to fullHD and add setMaximized(true) to stage
-    private final static int viewPortWidth = 1600;
-    private final static int viewPortHeight = 900;
+    private final static int viewPortWidth = 1920;
+    private final static int viewPortHeight = 1080;
     public static int getViewportWidth() {
         return viewPortWidth;
     }
@@ -40,6 +39,9 @@ public class Main extends Application {
     private final static NewNewYork newNewYork = new NewNewYork(5);
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
+    public static ScrollPane getScrollPane() {
+        return scrollPane;
+    }
     private static Scene scene;
     @Override
     public void start(Stage stage) {
@@ -66,7 +68,6 @@ public class Main extends Application {
         scene = new Scene(group, viewPortWidth, viewPortHeight);
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            //TODO create working methods for move, with different step
             for (Nibblonian n : newNewYork.getCitizens()) {
                 if (n.isActive() && !keyEvent.isControlDown()) {
                     // Move left
@@ -112,7 +113,7 @@ public class Main extends Application {
                 }
             }
 
-            // Last activated info
+            // Activated info
             if (keyEvent.getCode() == KeyCode.I) {
                 infoEnabled = !infoEnabled;
                 updateInfo();
@@ -125,6 +126,8 @@ public class Main extends Application {
             System.out.println("X: " +scrollX + " Y: "  + scrollY);
         });
         stage.setTitle("Futurama. The Game");
+        stage.setMaximized(true);
+//        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
