@@ -1,19 +1,23 @@
 package com.example.oop_graphics;
 
+import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
 import java.io.File;
+import java.text.CharacterIterator;
 import java.util.HashMap;
 
 public class MiniMap {
-    public final static Scale scale;
+    private final static SnapshotParameters snapshotParameters;
+    private final static Scale scale;
     private static double miniMapHeight;
     private static double miniMapWidth;
 
@@ -22,7 +26,7 @@ public class MiniMap {
     }
 
     private final HashMap<Nibblonian, ImageView> citizensMap;
-    private final HashMap<Device, ImageView> deviceGroups;
+    private final HashMap<Device, Group> deviceGroups;
     private final ImageView planetExpressOfficeThumbnail;
     private final ImageView momFriendlyRobotsThumbnail;
     private Pane pane;
@@ -32,6 +36,8 @@ public class MiniMap {
     private Image miniMapBackground;
 
     static {
+        snapshotParameters = new SnapshotParameters();
+        snapshotParameters.setFill(Color.TRANSPARENT);
         scale = new Scale(0.1, 0.1);
         miniMapHeight = NewNewYork.getRootHeight() * scale.getX();
         miniMapWidth = NewNewYork.getRootWidth() * scale.getY();
@@ -85,11 +91,21 @@ public class MiniMap {
         pane.getChildren().remove(citizensMap.get(citizen));
         citizensMap.remove(citizen);
     }
-    public void addDeviceToMiniMap(Device device) {
-
+    private Group getDeviceMiniGroup(Device device) {
+        Circle miniBorder = new Circle((device.getPosX() + device.getWidth() / 2) * scale.getX(), (device.getPosY() + device.getHeight() / 2)* scale.getY(), (device.getWidth() / 2) * scale.getX(), device.getBorder().getFill());
+        ImageView imageView = new ImageView(device.getImage().getImage());
+        imageView.setFitWidth((device.getWidth() - 50) * scale.getX());
+        imageView.setFitHeight((device.getHeight() - 50) * scale.getY());
+        imageView.setX((device.getPosX() + 25) * scale.getX());
+        imageView.setY((device.getPosY() + 30) * scale.getY());
+        Group deviceMiniGroup = new Group(miniBorder, imageView);
+        deviceMiniGroup.setLayoutX(device.getPosX() * scale.getX());
+        deviceMiniGroup.setLayoutY(device.getPosY() * scale.getY());
+        return deviceMiniGroup;
     }
-    public void removeDeviceFromMiniMap(Device device) {
-
+    public void addDeviceToMiniMap(Device device) {
+        deviceGroups.put(device, getDeviceMiniGroup(device));
+        pane.getChildren().add(deviceGroups.get(device));
     }
     public void moveMapArea(double posX, double posY) {
 
@@ -99,6 +115,7 @@ public class MiniMap {
     }
     public void updateMiniMap() {
         Pane temporaryPane = new Pane();
+        //TODO update colours of Devices
         temporaryPane.getChildren().addAll(pane.getChildren());
         pane.getChildren().removeAll(pane.getChildren());
         pane.getChildren().addAll(temporaryPane.getChildren());

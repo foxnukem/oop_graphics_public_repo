@@ -20,18 +20,18 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final double step = 7.0;
     private static final double speed = 0.0;
 
-    protected String name;
-    protected long id;
+    private String name;
+    private final long id;
     protected boolean isBad;
-    protected boolean isActive;
-    protected int healthValue;
-    protected double distanceTravelled;
+    private boolean isActive;
+    private int healthValue;
+    private double distanceTravelled;
     protected ArrayList<Device> devices;
 
-    protected double posX;
-    protected double posY;
-    protected double width;
-    protected double height;
+    private double posX;
+    private double posY;
+    private double width;
+    private double height;
     protected ImageView image;
     protected Line health;
     protected Rectangle border;
@@ -43,7 +43,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
 
     }
     public void moveUp() {
-        this.posY -= getStep();
+        this.posY -= this.getStep();
         if (this.posY <= 0.0) {
             this.posY = 0.0;
         }
@@ -51,7 +51,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
     }
     public void moveDown() {
-        this.posY += getStep();
+        this.posY += this.getStep();
         if (this.posY >= NewNewYork.getRootHeight() - this.height) {
             this.posY = NewNewYork.getRootHeight() - this.height;
         }
@@ -59,7 +59,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
     }
     public void moveLeft() {
-        this.posX -= getStep();
+        this.posX -= this.getStep();
         if (this.posX <= 0.0) {
             this.posX = 0.0;
         }
@@ -67,7 +67,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
     }
     public void moveRight() {
-        this.posX += getStep();
+        this.posX += this.getStep();
         if (this.posX >= NewNewYork.getRootWidth() - this.width) {
             this.posX = NewNewYork.getRootWidth() - this.width;
         }

@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class Main extends Application {
@@ -38,16 +37,21 @@ public class Main extends Application {
     private static boolean infoEnabled = false;
 
     private static ArrayList<Nibblonian> microObjectsForInfoPane;
-    private final static NewNewYork newNewYork = new NewNewYork(10);
+    private final static NewNewYork newNewYork = new NewNewYork(5);
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
     private static Scene scene;
     @Override
     public void start(Stage stage) {
+        newNewYork.addDevice(new Device(800, 800));
+        newNewYork.addDevice(new Device(10, 10));
         newNewYork.addCitizen(new Nibblonian());
         newNewYork.addCitizen(new Fry());
         newNewYork.addCitizen(new RobotBender());
         newNewYork.addCitizen(new RobotSanta());
+
+        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(0));
+        newNewYork.getCitizens().get(2).interactWithMacro(newNewYork.getDevices().get(0));
 
         initInfoPane();
         scrollPane.setPannable(true);

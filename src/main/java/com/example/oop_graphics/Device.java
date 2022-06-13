@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -18,53 +20,110 @@ public class Device {
         DESTROYEDBOMB,
         STOPPEDTIMER
     }
-    private final Text statusInText;
     private DeviceStatus status;
-    private long id;
-    protected double posX;
-    protected double posY;
-    protected double width;
-    protected double height;
-    protected ImageView image;
-    protected Circle border;
-    protected Group macroGroup;
+    private final static Color undefinedColor;
+    private final static Color safeColor;
+    private final static Color stoppedTimerColor;
+    private final static Color activeColor;
+    private final static Color destroyedColor;
+    private final long id;
+
+    public double getPosX() {
+        return posX;
+    }
+
+    public double getPosY() {
+        return posY;
+    }
+
+    private double posX;
+    private double posY;
+    private final double width;
+    private final double height;
+    private final Text statusInText;
+    private final Text deviceId;
+
+    public ImageView getImage() {
+        return image;
+    }
+
+    public Circle getBorder() {
+        return border;
+    }
+
+    private ImageView image;
+    private final Circle border;
+    private final Group macroGroup;
 
 
+    static {
+       undefinedColor = Color.GRAY;
+       safeColor = Color.GREEN;
+       stoppedTimerColor = Color.PURPLE;
+       activeColor = Color.RED;
+       destroyedColor = Color.BROWN;
+
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    {
+        width = 200;
+        height = 200;
+    }
     public Group getMacroGroup() {
         return macroGroup;
     }
 
-    public void setMacroGroup(Group macroGroup) {
-        this.macroGroup = macroGroup;
-    }
-    public Device() {
-        this.status = DeviceStatus.UNDEFINED;
+    public Device(double initialPosX, double initialPosY) {
+        status = DeviceStatus.UNDEFINED;
+        id = Main.deviceStartId++;
 
-        this.posX = 1500;
-        this.posY = 1000;
-        this.width = 200;
-        this.height = 200;
+        posX = initialPosX;
+        posY = initialPosY;
+
         try {
-            this.image = new ImageView(new Image(new File("images/device.png").toURI().toString()));
+            image = new ImageView(new Image(new File("src/images/device.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.image.setFitWidth(this.width - 50);
-        this.image.setFitHeight(this.height - 50);
 
-        this.border = new Circle(this.posX + this.width / 2, this.posY + this.height / 2, this.width / 2, Color.GRAY);
-        this.border.setOpacity(0.3);
+        image.setFitWidth(width - 50);
+        image.setFitHeight(height - 50);
+        image.setX(posX + 25);
+        image.setY(posY + 30);
 
-        this.statusInText = new Text(this.status.toString());
-        this.macroGroup = new Group(image, border, statusInText);
-        this.macroGroup.setLayoutX(this.posX);
-        this.macroGroup.setLayoutY(this.posY);
+        border = new Circle(posX + width / 2, posY + height / 2, width / 2, undefinedColor);
+        border.setOpacity(0.3);
 
+        statusInText = new Text(this.status.toString());
+        statusInText.setFont(new Font("Arial", 12));
+        statusInText.setFill(Color.ANTIQUEWHITE);
+        statusInText.setX(this.posX + 45);
+        statusInText.setY(this.posY + 35);
+
+        deviceId = new Text(Long.toString(this.id));
+        deviceId.setFont(new Font("Arial", 12));
+        deviceId.setFill(Color.ANTIQUEWHITE);
+        deviceId.setX(this.posX + this.width / 2 - 10);
+        deviceId.setY(this.posY + this.height - 30);
+        macroGroup = new Group(image, border, statusInText, deviceId);
+        macroGroup.setLayoutX(this.posX);
+        macroGroup.setLayoutY(this.posY);
     }
     public boolean setStatus(Nibblonian nibblonian, DeviceStatus status) {
         if (status.equals(DeviceStatus.SAFE)
             && !this.status.equals(DeviceStatus.ACTIVEBOMB)) {
             this.status = status;
+            this.statusInText.setText(this.status.toString());
+            this.border.setFill(safeColor);
+            NewNewYork.update();
             return true;
         } else if (this.status.equals(DeviceStatus.UNDEFINED)) {
             return false;
@@ -77,6 +136,9 @@ public class Device {
         if (status.equals(DeviceStatus.STOPPEDTIMER)
             && this.status.equals(DeviceStatus.ACTIVEBOMB)) {
             this.status = status;
+            this.statusInText.setText(this.status.toString());
+            this.border.setFill(stoppedTimerColor);
+            NewNewYork.update();
             return true;
         } else if (status.equals(DeviceStatus.DESTROYEDBOMB)
                 || this.status.equals(DeviceStatus.ACTIVEBOMB)) {
@@ -88,6 +150,9 @@ public class Device {
         if (status.equals(DeviceStatus.DESTROYEDBOMB)
             && this.status.equals(DeviceStatus.ACTIVEBOMB)) {
             this.status = status;
+            this.statusInText.setText(this.status.toString());
+            this.border.setFill(destroyedColor);
+            NewNewYork.update();
             return true;
         }
         return setStatus((Fry)robotBender, status);
@@ -96,6 +161,9 @@ public class Device {
         if (status.equals(DeviceStatus.ACTIVEBOMB)
             && this.status.equals(DeviceStatus.UNDEFINED)) {
             this.status = status;
+            this.statusInText.setText(this.status.toString());
+            this.border.setFill(activeColor);
+            NewNewYork.update();
             return true;
         } else if (!status.equals(DeviceStatus.UNDEFINED)) {
             System.out.println("Не дозволено для об'єктів класу RobotSanta");
@@ -107,11 +175,15 @@ public class Device {
     }
     @Override
     public int hashCode() {
-        return Objects.hash(statusInText, status, posX, posY, width, height, image, border, macroGroup);
+        return Objects.hash(id, deviceId);
     }
 
     @Override
     public String toString() {
         return Integer.toString(this.hashCode());
+    }
+
+    public long getId() {
+        return id;
     }
 }

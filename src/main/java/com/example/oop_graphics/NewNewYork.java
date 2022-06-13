@@ -1,8 +1,6 @@
 package com.example.oop_graphics;
 
-
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -10,46 +8,65 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NewNewYork {
-    private Device[] devices;
+    private final static Random random = new Random(System.currentTimeMillis());
+    public ArrayList<Device> getDevices() {
+        return devices;
+    }
+
+    private static ArrayList<Device> devices;
     // Problem: https://stackoverflow.com/questions/37104215/error-exception-in-thread-javafx-application-thread
     // Solution:https://stackoverflow.com/questions/6916385/is-there-a-concurrent-list-in-javas-jdk
     private CopyOnWriteArrayList<Nibblonian> citizens;
-    private final MomFriendlyRobots momFriendlyRobots;
-    private final PlanetExpressOffice planetExpressOffice;
-    private final MiniMap miniMap;
+    private static final MomFriendlyRobots momFriendlyRobots;
+    private static final PlanetExpressOffice planetExpressOffice;
+    private final static MiniMap miniMap;
 
     private final static int rootWidth;
     private final static int rootHeight;
     private final Pane root;
 
-    private Text undefinedDevices;
-    private Text safeDevices;
-    private Text stoppedTimerDevices;
-    private Text activeDevices;
-    private Text destroyedDevices;
+    private static Text undefinedDevices;
+    private static int numberOfUndefined;
+    private final static String undefinedText;
+    private static Text safeDevices;
+    private static int numberOfSafe;
+    private final static String safeText;
+    private static Text stoppedTimerDevices;
+    private static int numberOfStoppedTimer;
+    private final static String stoppedTimerText;
+    private static Text activeDevices;
+    private static int numberOfActive;
+    private final static String activeText;
+    private static Text destroyedDevices;
+    private static int numberOfDestroyed;
+    private final static String destroyedText;
 
-    // Статичний блок ініціалізації
     static {
         rootWidth = 4000;
         rootHeight = 3000;
-    }
-    // Нестатичний блок ініціалізації
-    {
-        root = new Pane();
         planetExpressOffice = new PlanetExpressOffice();
         momFriendlyRobots = new MomFriendlyRobots();
         miniMap = new MiniMap(planetExpressOffice, momFriendlyRobots);
+        undefinedText = "Undefined: ";
+        safeText = "Safe: ";
+        stoppedTimerText = "Stopped timer: ";
+        activeText = "Active bombs: ";
+        destroyedText = "Destroyed: ";
+    }
+
+    {
+        root = new Pane();
         citizens = new CopyOnWriteArrayList<>();
     }
 
     public NewNewYork(int numberOfDevices) {
-        devices = new Device[numberOfDevices];
+        devices = new ArrayList<>();
         root.setMinWidth(rootWidth);
         root.setMinHeight(rootHeight);
         Rectangle container = new Rectangle(rootWidth, rootHeight);
@@ -61,50 +78,50 @@ public class NewNewYork {
             System.out.println("Error");
         }
         root.getChildren().add(container);
-
         root.getChildren().add(planetExpressOffice.getPlanetExpressArea());
         root.getChildren().add(momFriendlyRobots.getMomCorpArea());
 
-        undefinedDevices = new Text("Undefined:");
+        undefinedDevices = new Text(undefinedText);
         undefinedDevices.setFill(Color.GRAY);
-        undefinedDevices.setFont(new Font("Monako", 20));
+        undefinedDevices.setFont(new Font("Arial", 20));
         undefinedDevices.setX(10);
         undefinedDevices.setY(35);
         root.getChildren().add(undefinedDevices);
 
-        safeDevices = new Text("Safe:");
+        safeDevices = new Text(safeText);
         safeDevices.setFill(Color.GREEN);
-        safeDevices.setFont(new Font("Monako", 20));
+        safeDevices.setFont(new Font("Arial", 20));
         safeDevices.setX(10);
         safeDevices.setY(65);
         root.getChildren().add(safeDevices);
 
-        stoppedTimerDevices = new Text("Stopped timer:");
+        stoppedTimerDevices = new Text(stoppedTimerText);
         stoppedTimerDevices.setFill(Color.PURPLE);
-        stoppedTimerDevices.setFont(new Font("Monako", 20));
+        stoppedTimerDevices.setFont(new Font("Arial", 20));
         stoppedTimerDevices.setX(10);
         stoppedTimerDevices.setY(95);
         root.getChildren().add(stoppedTimerDevices);
 
-        activeDevices = new Text("Active bombs:");
+        activeDevices = new Text(activeText);
         activeDevices.setFill(Color.RED);
-        activeDevices.setFont(new Font("Monako", 20));
+        activeDevices.setFont(new Font("Arial", 20));
         activeDevices.setX(10);
         activeDevices.setY(125);
         root.getChildren().add(activeDevices);
 
-        destroyedDevices = new Text("Destroyed:");
+        destroyedDevices = new Text(destroyedText);
         destroyedDevices.setFill(Color.BROWN);
-        destroyedDevices.setFont(new Font("Monako", 20));
+        destroyedDevices.setFont(new Font("Arial", 20));
         destroyedDevices.setX(10);
         destroyedDevices.setY(155);
         root.getChildren().add(destroyedDevices);
+
+        update();
     }
 
     public Pane getRoot() {
         return root;
     }
-
     public CopyOnWriteArrayList<Nibblonian> getCitizens() {
         return citizens;
     }
@@ -123,71 +140,61 @@ public class NewNewYork {
         return miniMap;
     }
 
-    public Text getUndefinedDevices() {
-        return undefinedDevices;
-    }
-
-    public void setUndefinedDevices(Text undefinedDevices) {
-        this.undefinedDevices = undefinedDevices;
-    }
-
-    public Text getSafeDevices() {
-        return safeDevices;
-    }
-
-    public void setSafeDevices(Text safeDevices) {
-        this.safeDevices = safeDevices;
-    }
-
-    public Text getStoppedTimerDevices() {
-        return stoppedTimerDevices;
-    }
-
-    public void setStoppedTimerDevices(Text stoppedTimerDevices) {
-        this.stoppedTimerDevices = stoppedTimerDevices;
-    }
-
-    public Text getActiveDevices() {
-        return activeDevices;
-    }
-
-    public void setActiveDevices(Text activeDevices) {
-        this.activeDevices = activeDevices;
-    }
-
-    public Text getDestroyedDevices() {
-        return destroyedDevices;
-    }
-
-    public void setDestroyedDevices(Text destroyedDevices) {
-        this.destroyedDevices = destroyedDevices;
-    }
-
     public void removeCitizen(Nibblonian citizen) {
         if (citizens.contains(citizen) && citizen instanceof RobotSanta) {
             root.getChildren().remove(citizen.getMicroGroup());
-            this.miniMap.removeCitizenFromMiniMap(citizen);
-            this.momFriendlyRobots.removeRobotSanta((RobotSanta) citizen);
-            this.citizens.remove(citizen);
+            miniMap.removeCitizenFromMiniMap(citizen);
+            momFriendlyRobots.removeRobotSanta((RobotSanta) citizen);
+            citizens.remove(citizen);
         } else if (citizens.contains(citizen) && !(citizen instanceof RobotSanta)) {
             root.getChildren().remove(citizen.getMicroGroup());
-            this.miniMap.removeCitizenFromMiniMap(citizen);
-            this.citizens.remove(citizen);
-            this.planetExpressOffice.removeTeamMember(citizen);
+            miniMap.removeCitizenFromMiniMap(citizen);
+            citizens.remove(citizen);
+            planetExpressOffice.removeTeamMember(citizen);
         }
     }
 
     public void addCitizen(Nibblonian citizen) {
         if (citizen instanceof RobotSanta) {
-            this.momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
+            momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
         } else {
-            this.planetExpressOffice.addTeamMember(citizen);
+            planetExpressOffice.addTeamMember(citizen);
         }
-        this.citizens.add(citizen);
+        citizens.add(citizen);
         root.getChildren().add(citizen.getMicroGroup());
-        this.miniMap.addCitizenToMiniMap(citizen);
+        miniMap.addCitizenToMiniMap(citizen);
     }
 
+    public void addDevice(Device device) {
+        devices.add(device);
+        device.getMacroGroup().setLayoutX(device.getPosX());
+        device.getMacroGroup().setLayoutY(device.getPosY());
+        root.getChildren().add(device.getMacroGroup());
+        miniMap.addDeviceToMiniMap(device);
+    }
+
+    public static void update() {
+        numberOfUndefined = 0;
+        numberOfSafe = 0;
+        numberOfStoppedTimer = 0;
+        numberOfActive = 0;
+        numberOfDestroyed = 0;
+        devices.forEach(element -> {
+            switch (element.getStatus()) {
+                case UNDEFINED -> numberOfUndefined++;
+                case SAFE -> numberOfSafe++;
+                case STOPPEDTIMER -> numberOfStoppedTimer++;
+                case ACTIVEBOMB -> numberOfActive++;
+                case DESTROYEDBOMB -> numberOfDestroyed++;
+            }
+        });
+        undefinedDevices.setText(undefinedText + numberOfUndefined);
+        safeDevices.setText(safeText + numberOfSafe);
+        stoppedTimerDevices.setText(stoppedTimerText + numberOfStoppedTimer);
+        activeDevices.setText(activeText + numberOfActive);
+        destroyedDevices.setText(destroyedText + numberOfDestroyed);
+        miniMap.updateMiniMap();
+    }
     public static int getRootWidth() {
         return rootWidth;
     }
