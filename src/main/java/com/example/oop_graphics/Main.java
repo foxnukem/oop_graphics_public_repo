@@ -34,6 +34,7 @@ public class Main extends Application {
     private final static ScrollPane infoScrollPane = new ScrollPane();
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
+    private static boolean isSpawned = false;
     private final static NewNewYork newNewYork = new NewNewYork(5);
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
@@ -41,13 +42,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        newNewYork.addDevice(new Device(200, 200));
-        newNewYork.addDevice(new Device(10, 10));
-        newNewYork.addCitizen(new Nibblonian());
-        newNewYork.addCitizen(new Fry());
-        newNewYork.addCitizen(new RobotBender());
-        newNewYork.addCitizen(new RobotSanta());
-
         initInfoPane();
 
         scrollPane.setPannable(true);
@@ -94,8 +88,6 @@ public class Main extends Application {
                         infoEnabled = false;
                         updateInfo();
                         activatedObjectsInfo.clear();
-                    } else {
-                        activatedObjectsInfo.clear(); // Prevents repeating in microobjects info
                     }
                     // Activated info open
                     if (keyEvent.getCode() == KeyCode.I) {
@@ -112,6 +104,13 @@ public class Main extends Application {
                         activatedObjectsInfo.clear();
                         updateInfo();
                     }
+                }
+            }
+            // Spawn objects
+            if (keyEvent.getCode() == KeyCode.S) {
+                if (!isSpawned) {
+                    spawnObjects();
+                    isSpawned = true;
                 }
             }
             // Move quicker
@@ -225,6 +224,14 @@ public class Main extends Application {
         }
         speedCoefficient -= 0.1;
         speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
+    }
+    public void spawnObjects() {
+        newNewYork.addDevice(new Device(200, 200));
+        newNewYork.addDevice(new Device(10, 10));
+        newNewYork.addCitizen(new Nibblonian());
+        newNewYork.addCitizen(new Fry());
+        newNewYork.addCitizen(new RobotBender());
+        newNewYork.addCitizen(new RobotSanta());
     }
     public static NewNewYork getWorld() {
         return Main.newNewYork;
