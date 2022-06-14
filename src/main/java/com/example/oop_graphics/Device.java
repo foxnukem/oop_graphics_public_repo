@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -21,40 +20,21 @@ public class Device {
         STOPPEDTIMER
     }
     private DeviceStatus status;
-    private final static Color undefinedColor;
-    private final static Color safeColor;
-    private final static Color stoppedTimerColor;
-    private final static Color activeColor;
-    private final static Color destroyedColor;
     private final long id;
-
-    public double getPosX() {
-        return posX;
-    }
-
-    public double getPosY() {
-        return posY;
-    }
-
     private final double posX;
     private final double posY;
     private final double width;
     private final double height;
     private final Text statusInText;
     private final Text deviceId;
-
-    public ImageView getImage() {
-        return image;
-    }
-
-    public Circle getBorder() {
-        return border;
-    }
-
     private ImageView image;
     private final Circle border;
     private final Group macroGroup;
-
+    private final static Color undefinedColor;
+    private final static Color safeColor;
+    private final static Color stoppedTimerColor;
+    private final static Color activeColor;
+    private final static Color destroyedColor;
 
     static {
        undefinedColor = Color.GRAY;
@@ -64,25 +44,13 @@ public class Device {
        destroyedColor = Color.BROWN;
 
     }
-    public double getWidth() {
-        return width;
-    }
-    public double getHeight() {
-        return height;
-    }
-    
     {
         width = 200;
         height = 200;
     }
-    public Group getMacroGroup() {
-        return macroGroup;
-    }
-
     public Device(double initialPosX, double initialPosY) {
         status = DeviceStatus.UNDEFINED;
         id = Main.deviceStartId++;
-
         posX = initialPosX;
         posY = initialPosY;
 
@@ -168,20 +136,40 @@ public class Device {
         }
         return false;
     }
+    public long getId() {
+        return id;
+    }
     public DeviceStatus getStatus() {
         return status;
+    }
+    public double getPosX() {
+        return posX;
+    }
+
+    public double getPosY() {
+        return posY;
+    }
+    public double getWidth() {
+        return width;
+    }
+    public double getHeight() {
+        return height;
+    }
+    public ImageView getImage() {
+        return image;
+    }
+    public Circle getBorder() {
+        return border;
+    }
+    public Group getMacroGroup() {
+        return macroGroup;
     }
     @Override
     public int hashCode() {
         return Objects.hash(id, deviceId);
     }
-
     @Override
     public String toString() {
         return Integer.toString(this.hashCode());
-    }
-
-    public long getId() {
-        return id;
     }
 }

@@ -42,7 +42,6 @@ public class InsertController implements Initializable {
             objectPosY = Math.abs(random.nextDouble(Main.getViewPortHeight()));
         }
         boolean isObjectActive = isActive.isSelected();
-
         if (classType.getValue() == null) {
             Alert noChosenClass = new Alert(Alert.AlertType.INFORMATION);
             noChosenClass.setTitle("Помилка");
@@ -50,7 +49,6 @@ public class InsertController implements Initializable {
             noChosenClass.setContentText("Оберіть у випадному меню клас нового мікрооб'єкта");
             noChosenClass.showAndWait();
         }
-
         if (classType.getValue() != null && classType.getValue().equals("Nibblonian")) {
             Main.getWorld().addCitizen(new Nibblonian(objectPosX, objectPosY, isObjectActive));
         } else if (classType.getValue() != null && classType.getValue().equals("Fry")) {
@@ -60,7 +58,6 @@ public class InsertController implements Initializable {
         } else if (classType.getValue() != null && classType.getValue().equals("RobotSanta")) {
             Main.getWorld().addCitizen(new RobotSanta(objectPosX, objectPosY, isObjectActive));
         }
-
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();
     }

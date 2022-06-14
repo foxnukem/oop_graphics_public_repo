@@ -15,22 +15,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NewNewYork {
     private final static Random random = new Random(System.currentTimeMillis());
-    public ArrayList<Device> getDevices() {
-        return devices;
-    }
-
     private static ArrayList<Device> devices;
     // Problem: https://stackoverflow.com/questions/37104215/error-exception-in-thread-javafx-application-thread
     // Solution:https://stackoverflow.com/questions/6916385/is-there-a-concurrent-list-in-javas-jdk
     private CopyOnWriteArrayList<Nibblonian> citizens;
-    private final static MomFriendlyRobots momFriendlyRobots;
-    private final static PlanetExpressOffice planetExpressOffice;
-    private final static MiniMap miniMap;
-
-    private final static int rootWidth;
-    private final static int rootHeight;
-    private final Pane root;
-
     private static Text undefinedDevices;
     private static int numberOfUndefined;
     private final static String undefinedText;
@@ -46,6 +34,12 @@ public class NewNewYork {
     private static Text destroyedDevices;
     private static int numberOfDestroyed;
     private final static String destroyedText;
+    private final static MomFriendlyRobots momFriendlyRobots;
+    private final static PlanetExpressOffice planetExpressOffice;
+    private final static MiniMap miniMap;
+    private final static int rootWidth;
+    private final static int rootHeight;
+    private final Pane root;
 
     static {
         rootWidth = 4000;
@@ -118,28 +112,16 @@ public class NewNewYork {
 
         update();
     }
-
-    public Pane getRoot() {
-        return root;
+    public void addCitizen(Nibblonian citizen) {
+        if (citizen instanceof RobotSanta) {
+            momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
+        } else {
+            planetExpressOffice.addTeamMember(citizen);
+        }
+        citizens.add(citizen);
+        root.getChildren().add(citizen.getMicroGroup());
+        miniMap.addCitizenToMiniMap(citizen);
     }
-    public CopyOnWriteArrayList<Nibblonian> getCitizens() {
-        return citizens;
-    }
-
-    public void setCitizens(CopyOnWriteArrayList<Nibblonian> citizens) {
-        this.citizens = citizens;
-    }
-
-    public MomFriendlyRobots getMomFriendlyRobots() {
-        return momFriendlyRobots;
-    }
-    public PlanetExpressOffice getPlanetExpressOffice() {
-        return planetExpressOffice;
-    }
-    public MiniMap getMiniMap() {
-        return miniMap;
-    }
-
     public void removeCitizen(Nibblonian citizen) {
         if (citizens.contains(citizen) && citizen instanceof RobotSanta) {
             root.getChildren().remove(citizen.getMicroGroup());
@@ -153,18 +135,6 @@ public class NewNewYork {
             planetExpressOffice.removeTeamMember(citizen);
         }
     }
-
-    public void addCitizen(Nibblonian citizen) {
-        if (citizen instanceof RobotSanta) {
-            momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
-        } else {
-            planetExpressOffice.addTeamMember(citizen);
-        }
-        citizens.add(citizen);
-        root.getChildren().add(citizen.getMicroGroup());
-        miniMap.addCitizenToMiniMap(citizen);
-    }
-
     public void addDevice(Device device) {
         devices.add(device);
         device.getMacroGroup().setLayoutX(device.getPosX());
@@ -172,7 +142,6 @@ public class NewNewYork {
         root.getChildren().add(device.getMacroGroup());
         miniMap.addDeviceToMiniMap(device);
     }
-
     public static void update() {
         numberOfUndefined = 0;
         numberOfSafe = 0;
@@ -198,8 +167,28 @@ public class NewNewYork {
     public static int getRootWidth() {
         return rootWidth;
     }
-
     public static int getRootHeight() {
         return rootHeight;
+    }
+    public ArrayList<Device> getDevices() {
+        return devices;
+    }
+    public Pane getRoot() {
+        return root;
+    }
+    public CopyOnWriteArrayList<Nibblonian> getCitizens() {
+        return citizens;
+    }
+    public void setCitizens(CopyOnWriteArrayList<Nibblonian> citizens) {
+        this.citizens = citizens;
+    }
+    public MomFriendlyRobots getMomFriendlyRobots() {
+        return momFriendlyRobots;
+    }
+    public PlanetExpressOffice getPlanetExpressOffice() {
+        return planetExpressOffice;
+    }
+    public MiniMap getMiniMap() {
+        return miniMap;
     }
 }

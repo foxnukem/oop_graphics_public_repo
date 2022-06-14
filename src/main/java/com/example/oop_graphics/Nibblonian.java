@@ -23,11 +23,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final double speed = 0.0;
 
     private String name;
-
-    public long getId() {
-        return id;
-    }
-
     private final long id;
     protected boolean isBad;
     private boolean isActive;
@@ -167,6 +162,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void setName(String name) {
         this.name = name;
     }
+    public long getId() {
+        return id;
+    }
     public boolean isBad() {
         return isBad;
     }
@@ -182,6 +180,16 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             activate();
         }
     }
+    public void cancelActivation() {
+        this.isActive = false;
+        this.border.setOpacity(0);
+        this.objectId.setOpacity(0);
+    }
+    private void activate() {
+        this.isActive = true;
+        this.border.setOpacity(1);
+        this.objectId.setOpacity(1);
+    }
     private void activateDeactivateBorder() {
         this.isActive = !this.isActive;
         if (this.isActive) {
@@ -191,44 +199,12 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             cancelActivation();
         }
     }
-    public void cancelActivation() {
-        this.isActive = false;
-        this.border.setOpacity(0);
-        this.objectId.setOpacity(0);
-    }
-    public void activate() {
-        this.isActive = true;
-        this.border.setOpacity(1);
-        this.objectId.setOpacity(1);
-    }
-    //TODO make to work this damn method (btw Cloning)
-    public void respawn() {
-        double posXOfOffice = Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth();
-        double posYOfOffice = Main.getWorld().getPlanetExpressOffice().getPosY();
-        Nibblonian n;
-        try {
-            n = this.clone();
-            n.setPosX(posXOfOffice);
-            n.setPosY(posYOfOffice);
-            while (n.getHealthValue() < getInitialHealthValue()) {
-                n.regenerate();
-            }
-            n.setName("Клон " + n.getName());
-            System.out.println(Main.getWorld().getCitizens());
-            Main.getWorld().removeCitizen(this);
-            Main.getWorld().addCitizen(n);
-            System.out.println("\n" + Main.getWorld().getCitizens());
-        } catch (CloneNotSupportedException e) {
-            System.out.println("Клонування не відбулось");
-        }
-    }
     public double getPosX() {
         return posX;
     }
     public void setPosX(double posX) {
         this.posX = posX;
         this.microGroup.setLayoutX(posX);
-
     }
     public double getPosY() {
         return posY;
@@ -282,6 +258,51 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public double getSpeed() {
         return speed;
     }
+    public ImageView getImageView() {
+        return image;
+    }
+    public void setImage(ImageView image) {
+        this.image = image;
+    }
+    public Line getHealth() {
+        return health;
+    }
+    public void setHealth(Line health) {
+        this.health = health;
+    }
+    public Rectangle getBorder() {
+        return border;
+    }
+    public void setBorder(Rectangle border) {
+        this.border = border;
+    }
+    public Group getMicroGroup() {
+        return microGroup;
+    }
+
+    public void setMicroGroup(Group microGroup) {
+        this.microGroup = microGroup;
+    }
+
+    public String getInfo() {
+        StringBuilder result = new StringBuilder();
+        String[] info = new String[7];
+        AtomicInteger indexThroughArray = new AtomicInteger(0);
+        Long[] idOfDevices = new Long[devices.size()];
+        devices.forEach(device -> idOfDevices[indexThroughArray.getAndIncrement()] = device.getId());
+        Arrays.sort(idOfDevices);
+        info[0] = "\n" + "Id: " + getId() + "\n";
+        info[1] = "Name: " + getName() + "\n";
+        info[2] = "X: " + getPosX() + "\n";
+        info[3] = "Y: " + getPosY() + "\n";
+        info[4] = "Health: " + getHealthValue() + "\n";
+        info[5] = "Distance: " + getDistanceTravelled() + "\n";
+        info[6] = "Transformed devices: " + Arrays.toString(idOfDevices) + "\n";
+        for (String i : info) {
+            result.append(i);
+        }
+        return result.toString();
+    }
     @Override
     public int compareTo(Nibblonian n) {
         if (this.devices.size() == n.devices.size() && this.healthValue < n.healthValue) {
@@ -327,54 +348,5 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
                 ", posX=" + posX +
                 ", posY=" + posY +
                 '}';
-    }
-    // print() method
-    public void print() {
-        System.out.println(this);
-    }
-    public ImageView getImageView() {
-        return image;
-    }
-    public void setImage(ImageView image) {
-        this.image = image;
-    }
-    public Line getHealth() {
-        return health;
-    }
-    public void setHealth(Line health) {
-        this.health = health;
-    }
-    public Rectangle getBorder() {
-        return border;
-    }
-    public void setBorder(Rectangle border) {
-        this.border = border;
-    }
-    public Group getMicroGroup() {
-        return microGroup;
-    }
-
-    public void setMicroGroup(Group microGroup) {
-        this.microGroup = microGroup;
-    }
-
-    public String getInfo() {
-        StringBuilder result = new StringBuilder();
-        String[] info = new String[7];
-        AtomicInteger indexThroughArray = new AtomicInteger(0);
-        Long[] idOfDevices = new Long[devices.size()];
-        devices.forEach(device -> idOfDevices[indexThroughArray.getAndIncrement()] = device.getId());
-        Arrays.sort(idOfDevices);
-        info[0] = "\n" + "Id: " + getId() + "\n";
-        info[1] = "Name: " + getName() + "\n";
-        info[2] = "X: " + getPosX() + "\n";
-        info[3] = "Y: " + getPosY() + "\n";
-        info[4] = "Health: " + getHealthValue() + "\n";
-        info[5] = "Distance: " + getDistanceTravelled() + "\n";
-        info[6] = "Transformed devices: " + Arrays.toString(idOfDevices) + "\n";
-        for (String i : info) {
-            result.append(i);
-        }
-        return result.toString();
     }
 }

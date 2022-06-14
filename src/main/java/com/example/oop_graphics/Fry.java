@@ -11,23 +11,6 @@ public class Fry extends Nibblonian {
     private static final int regenerateRate = 8;
     private static final double step = 10.0;
     private static final double speed = 0.0;
-
-    public int getInitialHealthValue() {
-        return initialHealthValue;
-    }
-    public int getHurtRate() {
-        return hurtRate;
-    }
-    public int getRegenerateRate() {
-        return regenerateRate;
-    }
-    public double getStep() {
-        return step;
-    }
-    public double getSpeed() {
-        return speed;
-    }
-
     public Fry(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
@@ -45,7 +28,7 @@ public class Fry extends Nibblonian {
     public Fry() {
         this("Фрай", 1100, 1000);
     }
-    protected void stopTimer(Device device) {
+    public void stopTimer(Device device) {
         if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.STOPPEDTIMER)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
@@ -59,7 +42,21 @@ public class Fry extends Nibblonian {
     public void interactWithMacro(Device device) {
         this.stopTimer(device);
     }
-
+    public int getInitialHealthValue() {
+        return initialHealthValue;
+    }
+    public int getHurtRate() {
+        return hurtRate;
+    }
+    public int getRegenerateRate() {
+        return regenerateRate;
+    }
+    public double getStep() {
+        return step;
+    }
+    public double getSpeed() {
+        return speed;
+    }
     @Override
     public String toString() {
         return "Fry{" +

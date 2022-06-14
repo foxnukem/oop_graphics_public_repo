@@ -45,6 +45,7 @@ public class Main extends Application {
         return scrollPane;
     }
     private static Scene scene;
+
     @Override
     public void start(Stage stage) {
         newNewYork.addDevice(new Device(200, 200));
@@ -159,7 +160,9 @@ public class Main extends Application {
         timer.start();
         stage.show();
     }
-
+    public static NewNewYork getWorld() {
+        return Main.newNewYork;
+    }
     public void insertNewMicro(Stage stage) throws IOException {
         Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("insert.fxml"))));
         Stage window = new Stage();
@@ -169,7 +172,6 @@ public class Main extends Application {
         window.setScene(scene);
         window.showAndWait();
     }
-
     public void initInfoPane() {
         infoPane.setMinSize(MiniMap.getMiniMapWidth(), MiniMap.getMiniMapHeight());
         infoPane.setPrefSize(MiniMap.getMiniMapWidth() + 70, MiniMap.getMiniMapHeight() + 70);
@@ -199,7 +201,5 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
-    public static NewNewYork getWorld() {
-        return Main.newNewYork;
-    }
+
 }

@@ -12,21 +12,6 @@ public class RobotSanta extends Fry {
     private static final double step = 15.0;
     private static final double speed = 0.0;
 
-    public int getInitialHealthValue() {
-        return initialHealthValue;
-    }
-    public int getHurtRate() {
-        return hurtRate;
-    }
-    public int getRegenerateRate() {
-        return regenerateRate;
-    }
-    public double getStep() {
-        return step;
-    }
-    public double getSpeed() {
-        return speed;
-    }
     public RobotSanta(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         this.isBad = true;
@@ -60,7 +45,21 @@ public class RobotSanta extends Fry {
             nibblonian.getHurt();
         }
     }
-
+    public int getInitialHealthValue() {
+        return initialHealthValue;
+    }
+    public int getHurtRate() {
+        return hurtRate;
+    }
+    public int getRegenerateRate() {
+        return regenerateRate;
+    }
+    public double getStep() {
+        return step;
+    }
+    public double getSpeed() {
+        return speed;
+    }
     @Override
     public String toString() {
         return "RobotBender{" +

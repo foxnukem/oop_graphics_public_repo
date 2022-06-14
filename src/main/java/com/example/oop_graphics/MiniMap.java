@@ -14,29 +14,22 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
 import java.io.File;
-import java.text.CharacterIterator;
 import java.util.HashMap;
 
 public class MiniMap {
     private final static SnapshotParameters snapshotParameters;
     private final static Scale scale;
-    private static double miniMapHeight;
-    private static double miniMapWidth;
+    private final static double miniMapHeight;
+    private final static double miniMapWidth;
     private static boolean isTransparent;
-
-    public HashMap<Nibblonian, ImageView> getCitizensMap() {
-        return citizensMap;
-    }
-
     private final HashMap<Nibblonian, ImageView> citizensMap;
     private final HashMap<Device, Group> deviceGroups;
     private final HashMap<Device, Circle> devicesCircles;
     private final ImageView planetExpressOfficeThumbnail;
     private final ImageView momFriendlyRobotsThumbnail;
-    private Pane pane;
-    private Rectangle container;
-    private Rectangle mapArea;
-    private Rectangle border;
+    private final Pane pane;
+    private final Rectangle container;
+    private final Rectangle mapArea;
     private Image miniMapBackground;
 
     static {
@@ -51,10 +44,10 @@ public class MiniMap {
         citizensMap = new HashMap<>();
         deviceGroups = new HashMap<>();
         devicesCircles = new HashMap<>();
-        this.pane = new Pane();
-        this.pane.setMinSize(miniMapWidth, miniMapHeight);
-        this.pane.setPrefSize(miniMapWidth, miniMapHeight);
-        this.pane.setMaxSize(miniMapWidth, miniMapHeight);
+        pane = new Pane();
+        pane.setMinSize(miniMapWidth, miniMapHeight);
+        pane.setPrefSize(miniMapWidth, miniMapHeight);
+        pane.setMaxSize(miniMapWidth, miniMapHeight);
 
         planetExpressOfficeThumbnail = new ImageView(planetExpressOffice.getImageView().getImage());
         planetExpressOfficeThumbnail.setLayoutX(planetExpressOffice.getPosX() * scale.getX());
@@ -73,14 +66,14 @@ public class MiniMap {
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.container = new Rectangle(0, 0, pane.getMinWidth(), pane.getMinHeight());
+        container = new Rectangle(0, 0, pane.getMinWidth(), pane.getMinHeight());
         container.setFill(new ImagePattern(miniMapBackground));
 
-        this.mapArea = new Rectangle(0, 0, Main.getViewportWidth() * scale.getX(), Main.getViewPortHeight() * scale.getY());
-        this.mapArea.setFill(Color.TRANSPARENT);
-        this.mapArea.setStroke(Color.GREEN);
-        this.mapArea.setStrokeWidth(2);
-        this.pane.getChildren().addAll(container, planetExpressOfficeThumbnail, momFriendlyRobotsThumbnail, mapArea);
+        mapArea = new Rectangle(0, 0, Main.getViewportWidth() * scale.getX(), Main.getViewPortHeight() * scale.getY());
+        mapArea.setFill(Color.TRANSPARENT);
+        mapArea.setStroke(Color.GREEN);
+        mapArea.setStrokeWidth(2);
+        pane.getChildren().addAll(container, planetExpressOfficeThumbnail, momFriendlyRobotsThumbnail, mapArea);
 
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
@@ -92,14 +85,13 @@ public class MiniMap {
             if (mouseEvent.getButton() == MouseButton.MIDDLE) {
                 isTransparent = !isTransparent;
                 if (isTransparent) {
-                    this.pane.setOpacity(0);
+                    pane.setOpacity(0);
                 } else {
-                    this.pane.setOpacity(1);
+                    pane.setOpacity(1);
                 }
             }
         });
     }
-
     public void addCitizenToMiniMap(Nibblonian citizen) {
         ImageView citizenThumbnail = new ImageView(citizen.getImageView().getImage());
         citizensMap.put(citizen, citizenThumbnail);
@@ -175,57 +167,17 @@ public class MiniMap {
     public static double getMiniMapHeight() {
         return miniMapHeight;
     }
-
-    public void setMiniMapHeight(double miniMapHeight) {
-        MiniMap.miniMapHeight = miniMapHeight;
-    }
-
     public static double getMiniMapWidth() {
         return miniMapWidth;
     }
-
-    public void setMiniMapWidth(double miniMapWidth) {
-        MiniMap.miniMapWidth = miniMapWidth;
+    public HashMap<Nibblonian, ImageView> getCitizensMap() {
+        return citizensMap;
     }
-
     public Pane getPane() {
         return pane;
     }
-
-    public void setPane(Pane pane) {
-        this.pane = pane;
-    }
-
-    public Rectangle getContainer() {
-        return container;
-    }
-
-    public void setContainer(Rectangle container) {
-        this.container = container;
-    }
-
     public Rectangle getMapArea() {
         return mapArea;
-    }
-
-    public void setMapArea(Rectangle mapArea) {
-        this.mapArea = mapArea;
-    }
-
-    public Rectangle getBorder() {
-        return border;
-    }
-
-    public void setBorder(Rectangle border) {
-        this.border = border;
-    }
-
-    public Image getMiniMapBackground() {
-        return miniMapBackground;
-    }
-
-    public void setMiniMapBackground(Image miniMapBackground) {
-        this.miniMapBackground = miniMapBackground;
     }
     public static Scale getScale() {
         return scale;
