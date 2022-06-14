@@ -94,26 +94,26 @@ public class Device {
 
         image.setFitWidth(width - 50);
         image.setFitHeight(height - 50);
-        image.setX(posX + 25);
-        image.setY(posY + 30);
+        image.setX(25);
+        image.setY(30);
 
-        border = new Circle(posX + width / 2, posY + height / 2, width / 2, undefinedColor);
+        border = new Circle(width / 2, height / 2, width / 2, undefinedColor);
         border.setOpacity(0.3);
 
-        statusInText = new Text(this.status.toString());
+        statusInText = new Text(status.toString());
         statusInText.setFont(new Font("Arial", 12));
         statusInText.setFill(Color.ANTIQUEWHITE);
-        statusInText.setX(this.posX + 45);
-        statusInText.setY(this.posY + 35);
+        statusInText.setX(45);
+        statusInText.setY(35);
 
-        deviceId = new Text(Long.toString(this.id));
+        deviceId = new Text(Long.toString(id));
         deviceId.setFont(new Font("Arial", 12));
         deviceId.setFill(Color.ANTIQUEWHITE);
-        deviceId.setX(this.posX + this.width / 2 - 10);
-        deviceId.setY(this.posY + this.height - 30);
+        deviceId.setX(width / 2 - 10);
+        deviceId.setY(height - 30);
         macroGroup = new Group(image, border, statusInText, deviceId);
-        macroGroup.setLayoutX(this.posX);
-        macroGroup.setLayoutY(this.posY);
+        macroGroup.setLayoutX(posX);
+        macroGroup.setLayoutY(posY);
     }
     public boolean setStatus(Nibblonian nibblonian, DeviceStatus status) {
         if (status.equals(DeviceStatus.SAFE)

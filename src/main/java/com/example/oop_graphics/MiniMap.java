@@ -115,14 +115,14 @@ public class MiniMap {
         citizensMap.remove(citizen);
     }
     public void addDeviceToMiniMap(Device device) {
-        Circle miniBorder = new Circle((device.getPosX() + device.getWidth() / 2) * scale.getX(), (device.getPosY() + device.getHeight() / 2)* scale.getY(), (device.getWidth() / 2) * scale.getX(), device.getBorder().getFill());
+        Circle miniBorder = new Circle((device.getWidth() / 2) * scale.getX(), (device.getHeight() / 2)* scale.getY(), (device.getWidth() / 2) * scale.getX(), device.getBorder().getFill());
         miniBorder.setOpacity(0.5);
         devicesCircles.put(device, miniBorder);
         ImageView imageView = new ImageView(device.getImage().getImage());
         imageView.setFitWidth((device.getWidth() - 50) * scale.getX());
         imageView.setFitHeight((device.getHeight() - 50) * scale.getY());
-        imageView.setX((device.getPosX() + 25) * scale.getX());
-        imageView.setY((device.getPosY() + 30) * scale.getY());
+        imageView.setX(25 * scale.getX());
+        imageView.setY(30 * scale.getY());
         Group deviceMiniGroup = new Group(devicesCircles.get(device), imageView);
         deviceMiniGroup.setLayoutX(device.getPosX() * scale.getX());
         deviceMiniGroup.setLayoutY(device.getPosY() * scale.getY());
