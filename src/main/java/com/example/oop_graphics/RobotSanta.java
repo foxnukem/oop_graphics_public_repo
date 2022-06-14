@@ -14,24 +14,24 @@ public class RobotSanta extends Fry {
 
     public RobotSanta(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
-        this.isBad = true;
+        isBad = true;
         try {
-            this.image = new ImageView(new Image(new File("src/images/santa.png").toURI().toString()));
+            image = new ImageView(new Image(new File("src/images/santa.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.microGroup.getChildren().removeAll(this.microGroup.getChildren());
-        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border, this.objectId);
+        microGroup.getChildren().removeAll(microGroup.getChildren());
+        microGroup.getChildren().addAll(image, health, transformedDevices, border, objectId);
     }
     public RobotSanta(double initialPosX, double initialPosY, boolean isActive) {
-        this("Санта", initialPosX, initialPosY);
+        this("Робот Санта", initialPosX, initialPosY);
         this.setActive(isActive);
     }
     public RobotSanta() {
         this("Робот Санта", 1300, 1000);
     }
     private void makeBombFromDevice(Device device) {
-        if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.ACTIVEBOMB)) {
+        if (!devices.contains(device) && device.setStatus(this, Device.DeviceStatus.ACTIVEBOMB)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
         }
@@ -43,6 +43,7 @@ public class RobotSanta extends Fry {
     public void damageOther(Nibblonian nibblonian) {
         if (!(nibblonian instanceof RobotSanta)) {
             nibblonian.getHurt();
+            this.getHurt();
         }
     }
     public int getInitialHealthValue() {
@@ -58,7 +59,7 @@ public class RobotSanta extends Fry {
         return step;
     }
     public double getSpeed() {
-        return speed;
+        return speed * Main.speedCoefficient;
     }
     @Override
     public String toString() {

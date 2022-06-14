@@ -41,67 +41,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     protected Text objectId;
     protected Group microGroup;
 
-    public void moveTo(double x, double y) {
-
-    }
-    public void moveUp() {
-        this.posY -= this.getStep();
-        if (this.posY <= 0.0) {
-            this.posY = 0.0;
-        }
-        this.setPosY(this.posY);
-        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
-    }
-    public void moveDown() {
-        this.posY += this.getStep();
-        if (this.posY >= NewNewYork.getRootHeight() - this.height) {
-            this.posY = NewNewYork.getRootHeight() - this.height;
-        }
-        this.setPosY(this.posY);
-        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
-    }
-    public void moveLeft() {
-        this.posX -= this.getStep();
-        if (this.posX <= 0.0) {
-            this.posX = 0.0;
-        }
-        this.setPosX(this.posX);
-        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
-    }
-    public void moveRight() {
-        this.posX += this.getStep();
-        if (this.posX >= NewNewYork.getRootWidth() - this.width) {
-            this.posX = NewNewYork.getRootWidth() - this.width;
-        }
-        this.setPosX(this.posX);
-        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
-    }
-    protected void markDeviceAsSafe(Device device) {
-        if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.SAFE)) {
-            devices.add(device);
-            transformedDevices.setText(Integer.toString(devices.size()));
-        }
-    }
-    public void getHurt() {
-        if ((this.healthValue - getHurtRate()) > 0) {
-            this.healthValue -= getHurtRate();
-        } else {
-            this.healthValue = 0;
-        }
-    }
-    public void regenerate() {
-        if ((this.healthValue + getRegenerateRate()) >= getInitialHealthValue()) {
-            this.healthValue = getInitialHealthValue();
-        } else {
-            this.healthValue += getRegenerateRate();
-        }
-    }
-    public void damageOther(RobotSanta robotSanta) {
-        robotSanta.getHurt();
-    }
-    public void interactWithMacro(Device device) {
-        markDeviceAsSafe(device);
-    }
     public Nibblonian(String name, double initialPosX, double initialPosY) {
         this.name = name;
         this.id = Main.startId++;
@@ -130,8 +69,8 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.health = new Line();
         this.health.setStroke(Color.GREEN);
         this.health.setStrokeWidth(5);
-        this.health.setStartX(this.health.getStartX() + 5);
-        this.health.setStartY(this.health.getStartY() + 10);
+        this.health.setStartX(5);
+        this.health.setStartY(10);
         this.health.setEndX(this.health.getStartX() + this.width - 10);
         this.health.setEndY(this.health.getStartY());
 
@@ -143,8 +82,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.objectId.setFill(Color.AZURE);
         this.objectId.setOpacity(0);
 
-        this.microGroup = new Group(health, transformedDevices, border, objectId);
-        this.microGroup.getChildren().add(image);
+        this.microGroup = new Group(image, health, transformedDevices, border, objectId);
         this.microGroup.setLayoutX(this.posX);
         this.microGroup.setLayoutY(this.posY);
         this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> activateDeactivateBorder());
@@ -155,6 +93,106 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     public Nibblonian() {
         this("Жуйка", 1000, 1000);
+    }
+
+    public void moveTo(double x, double y) {
+
+    }
+    public void moveUp() {
+        this.posY -= this.getStep();
+        if (this.posY <= 0.0) {
+            this.posY = 0.0;
+        } else {
+            distanceTravelled += getStep();
+        }
+        this.setPosY(posY);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
+    }
+    public void moveDown() {
+        this.posY += this.getStep();
+        if (this.posY >= NewNewYork.getRootHeight() - this.height) {
+            this.posY = NewNewYork.getRootHeight() - this.height;
+        } else {
+            distanceTravelled += getStep();
+        }
+        this.setPosY(this.posY);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
+    }
+    public void moveLeft() {
+        this.posX -= this.getStep();
+        if (this.posX <= 0.0) {
+            this.posX = 0.0;
+        } else {
+            distanceTravelled += getStep();
+        }
+        this.setPosX(this.posX);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
+    }
+    public void moveRight() {
+        this.posX += this.getStep();
+        if (this.posX >= NewNewYork.getRootWidth() - this.width) {
+            this.posX = NewNewYork.getRootWidth() - this.width;
+        } else {
+            distanceTravelled += getStep();
+        }
+        this.setPosX(this.posX);
+        Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
+    }
+    public void markDeviceAsSafe(Device device) {
+        if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.SAFE)) {
+            devices.add(device);
+            transformedDevices.setText(Integer.toString(devices.size()));
+        }
+    }
+    public void getHurt() {
+        if ((this.healthValue - getHurtRate()) > 0) {
+            this.healthValue -= getHurtRate();
+            this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
+        } else {
+            this.healthValue = 0;
+            Main.getWorld().removeCitizen(this);
+        }
+    }
+    public void regenerate() {
+        if ((this.healthValue + getRegenerateRate()) >= getInitialHealthValue()) {
+            this.healthValue = getInitialHealthValue();
+            this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
+        } else {
+            this.healthValue += getRegenerateRate();
+            this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
+        }
+    }
+    public void damageOther(RobotSanta robotSanta) {
+        robotSanta.getHurt();
+        this.getHurt();
+    }
+    public void interactWithMacro(Device device) {
+        markDeviceAsSafe(device);
+    }
+    public void setActive(boolean active) {
+        isActive = active;
+        if (isActive) {
+            activate();
+        }
+    }
+    public void cancelActivation() {
+        isActive = false;
+        border.setOpacity(0);
+        objectId.setOpacity(0);
+    }
+    private void activate() {
+        isActive = true;
+        border.setOpacity(1);
+        objectId.setOpacity(1);
+    }
+    private void activateDeactivateBorder() {
+        isActive = !isActive;
+        if (isActive) {
+            activate();
+        }
+        if (!isActive) {
+            cancelActivation();
+        }
     }
     public String getName() {
         return name;
@@ -173,31 +211,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     public boolean isActive() {
         return isActive;
-    }
-    public void setActive(boolean active) {
-        isActive = active;
-        if (isActive) {
-            activate();
-        }
-    }
-    public void cancelActivation() {
-        this.isActive = false;
-        this.border.setOpacity(0);
-        this.objectId.setOpacity(0);
-    }
-    private void activate() {
-        this.isActive = true;
-        this.border.setOpacity(1);
-        this.objectId.setOpacity(1);
-    }
-    private void activateDeactivateBorder() {
-        this.isActive = !this.isActive;
-        if (this.isActive) {
-            activate();
-        }
-        if (!this.isActive) {
-            cancelActivation();
-        }
     }
     public double getPosX() {
         return posX;
@@ -256,7 +269,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         return step;
     }
     public double getSpeed() {
-        return speed;
+        return speed * Main.speedCoefficient;
     }
     public ImageView getImageView() {
         return image;
@@ -289,13 +302,13 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         Long[] idOfDevices = new Long[devices.size()];
         devices.forEach(device -> idOfDevices[indexThroughArray.getAndIncrement()] = device.getId());
         Arrays.sort(idOfDevices);
-        info[0] = "\n" + "Id: " + getId() + "\n";
-        info[1] = "Name: " + getName() + "\n";
+        info[0] = "\n" + "Ідентифікатор: " + getId() + "\n";
+        info[1] = "Ім'я: " + getName() + "\n";
         info[2] = "X: " + getPosX() + "\n";
         info[3] = "Y: " + getPosY() + "\n";
-        info[4] = "Health: " + getHealthValue() + "\n";
-        info[5] = "Distance: " + getDistanceTravelled() + "\n";
-        info[6] = "Transformed devices: " + Arrays.toString(idOfDevices) + "\n";
+        info[4] = "Здоров'я: " + getHealthValue() + "\n";
+        info[5] = "Пройдена відстань: " + getDistanceTravelled() + "\n";
+        info[6] = "Модифіковані пристрої: " + Arrays.toString(idOfDevices) + "\n";
         for (String i : info) {
             result.append(i);
         }

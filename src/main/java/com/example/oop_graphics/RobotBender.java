@@ -15,12 +15,12 @@ public class RobotBender extends Fry {
     public RobotBender(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
-            this.image = new ImageView(new Image(new File("src/images/bender.png").toURI().toString()));
+            image = new ImageView(new Image(new File("src/images/bender.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.microGroup.getChildren().removeAll(this.microGroup.getChildren());
-        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border, this.objectId);
+        microGroup.getChildren().removeAll(microGroup.getChildren());
+        microGroup.getChildren().addAll(image, health, transformedDevices, border, objectId);
     }
 
     public RobotBender(double initialPosX, double initialPosY, boolean isActive) {
@@ -28,7 +28,7 @@ public class RobotBender extends Fry {
         this.setActive(isActive);
     }
     public RobotBender() {
-        this("Робот Бендер", 1200, 1000);
+        this("Бендер", 1200, 1000);
     }
     private void destroyBomb(Device device) {
         if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.DESTROYEDBOMB)) {
@@ -53,7 +53,7 @@ public class RobotBender extends Fry {
         return step;
     }
     public double getSpeed() {
-        return speed;
+        return speed * Main.speedCoefficient;
     }
     @Override
     public String toString() {

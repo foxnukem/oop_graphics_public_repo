@@ -14,12 +14,12 @@ public class Fry extends Nibblonian {
     public Fry(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
-            this.image = new ImageView(new Image(new File("src/images/fry.png").toURI().toString()));
+            image = new ImageView(new Image(new File("src/images/fry.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.microGroup.getChildren().removeAll(this.microGroup.getChildren());
-        this.microGroup.getChildren().addAll(this.image, this.health, this.transformedDevices, this.border, this.objectId);
+        microGroup.getChildren().removeAll(microGroup.getChildren());
+        microGroup.getChildren().addAll(image, health, transformedDevices, border, objectId);
     }
     public Fry(double initialPosX, double initialPoxY, boolean isActive) {
         this("Фрай", initialPosX, initialPoxY);
@@ -55,7 +55,7 @@ public class Fry extends Nibblonian {
         return step;
     }
     public double getSpeed() {
-        return speed;
+        return speed * Main.speedCoefficient;
     }
     @Override
     public String toString() {

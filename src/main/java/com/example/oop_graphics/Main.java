@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -23,7 +24,7 @@ import java.util.Objects;
 public class Main extends Application {
     public static long startId = 1000;
     public static long deviceStartId = 100;
-    public static double speedCoefficient;
+    public static double speedCoefficient = 0.5;
     private final static int viewPortWidth = 1920;
     private final static int viewPortHeight = 1080;
     private static double scrollX;
@@ -118,11 +119,11 @@ public class Main extends Application {
             }
             // Move quicker
             if (keyEvent.getCode() == KeyCode.Y) {
-
+                increaseSpeed();
             }
             // Move slower
             if (keyEvent.getCode() == KeyCode.U) {
-
+                decreaseSpeed();
             }
             // Dialog for adding microobjects
             if (keyEvent.getCode() == KeyCode.INSERT) {
@@ -132,6 +133,18 @@ public class Main extends Application {
                     throw new RuntimeException(e);
                 }
                 activatedObjectsInfo.clear();
+            }
+            if (keyEvent.isControlDown()) {
+                // Deserialization
+                if (keyEvent.getCode() == KeyCode.O) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Відкрити (десеріалізувати)");
+                }
+                // Serialization
+                else if (keyEvent.getCode() == KeyCode.S) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Зберегти (серіалізувати)");
+                }
             }
         });
         scrollPane.viewportBoundsProperty().addListener((observableValue, bounds, t1) -> {
@@ -186,6 +199,22 @@ public class Main extends Application {
             infoPane.setOpacity(0);
             infoPane.toBack();
         }
+    }
+    public void increaseSpeed() {
+        if (speedCoefficient + 0.1 > 1) {
+            speedCoefficient = 1;
+            return;
+        }
+        speedCoefficient += 0.1;
+        speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
+    }
+    public void decreaseSpeed() {
+        if (speedCoefficient - 0.1 < 0.1) {
+            speedCoefficient = 0.1;
+            return;
+        }
+        speedCoefficient -= 0.1;
+        speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
     }
     public static NewNewYork getWorld() {
         return Main.newNewYork;
