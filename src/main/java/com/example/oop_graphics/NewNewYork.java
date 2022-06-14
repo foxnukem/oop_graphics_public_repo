@@ -23,8 +23,8 @@ public class NewNewYork {
     // Problem: https://stackoverflow.com/questions/37104215/error-exception-in-thread-javafx-application-thread
     // Solution:https://stackoverflow.com/questions/6916385/is-there-a-concurrent-list-in-javas-jdk
     private CopyOnWriteArrayList<Nibblonian> citizens;
-    private static final MomFriendlyRobots momFriendlyRobots;
-    private static final PlanetExpressOffice planetExpressOffice;
+    private final static MomFriendlyRobots momFriendlyRobots;
+    private final static PlanetExpressOffice planetExpressOffice;
     private final static MiniMap miniMap;
 
     private final static int rootWidth;

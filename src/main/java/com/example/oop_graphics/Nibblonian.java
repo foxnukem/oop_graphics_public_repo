@@ -11,7 +11,9 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final int initialHealthValue = 100;
@@ -21,6 +23,11 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final double speed = 0.0;
 
     private String name;
+
+    public long getId() {
+        return id;
+    }
+
     private final long id;
     protected boolean isBad;
     private boolean isActive;
@@ -39,7 +46,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     protected Text objectId;
     protected Group microGroup;
 
-    protected void moveTo(double x, double y) {
+    public void moveTo(double x, double y) {
 
     }
     public void moveUp() {
@@ -97,7 +104,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void damageOther(RobotSanta robotSanta) {
         robotSanta.getHurt();
     }
-
     public void interactWithMacro(Device device) {
         markDeviceAsSafe(device);
     }
@@ -148,7 +154,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.microGroup.setLayoutY(this.posY);
         this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> activateDeactivateBorder());
     }
-
     public Nibblonian(double initialPosX, double initialPosY, boolean isActive) {
         this("Жуйка", initialPosX, initialPosY);
         this.setActive(isActive);
@@ -159,29 +164,24 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
     public boolean isBad() {
         return isBad;
     }
-
     public void setBad(boolean bad) {
         isBad = bad;
     }
-
     public boolean isActive() {
         return isActive;
     }
-
     public void setActive(boolean active) {
         isActive = active;
         if (isActive) {
             activate();
         }
     }
-
     private void activateDeactivateBorder() {
         this.isActive = !this.isActive;
         if (this.isActive) {
@@ -225,62 +225,48 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public double getPosX() {
         return posX;
     }
-
     public void setPosX(double posX) {
         this.posX = posX;
         this.microGroup.setLayoutX(posX);
 
     }
-
     public double getPosY() {
         return posY;
     }
-
     public void setPosY(double posY) {
         this.posY = posY;
         this.microGroup.setLayoutY(posY);
     }
-
     public double getWidth() {
         return width;
     }
-
     public void setWidth(double width) {
         this.width = width;
     }
-
     public double getHeight() {
         return height;
     }
-
     public void setHeight(double height) {
         this.height = height;
     }
-
     public int getHealthValue() {
         return healthValue;
     }
-
     public void setHealthValue(int healthValue) {
         this.healthValue = healthValue;
     }
-
     public double getDistanceTravelled() {
         return distanceTravelled;
     }
-
     public void setDistanceTravelled(double distanceTravelled) {
         this.distanceTravelled = distanceTravelled;
     }
-
     public ArrayList<Device> getDevices() {
         return devices;
     }
-
     public void setDevices(ArrayList<Device> devices) {
         this.devices = devices;
     }
-
     public int getInitialHealthValue() {
         return initialHealthValue;
     }
@@ -296,7 +282,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public double getSpeed() {
         return speed;
     }
-
     @Override
     public int compareTo(Nibblonian n) {
         if (this.devices.size() == n.devices.size() && this.healthValue < n.healthValue) {
@@ -310,19 +295,16 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         }
         return 0;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Nibblonian that)) return false;
         return id == that.id && isBad == that.isBad && isActive == that.isActive && healthValue == that.healthValue && Double.compare(that.distanceTravelled, distanceTravelled) == 0 && Double.compare(that.posX, posX) == 0 && Double.compare(that.posY, posY) == 0 && Double.compare(that.width, width) == 0 && Double.compare(that.height, height) == 0 && Objects.equals(name, that.name) && Objects.equals(devices, that.devices) && Objects.equals(image, that.image) && Objects.equals(health, that.health) && Objects.equals(border, that.border) && Objects.equals(transformedDevices, that.transformedDevices) && Objects.equals(microGroup, that.microGroup);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(name, id, isBad, image);
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public Nibblonian clone() throws CloneNotSupportedException {
@@ -332,7 +314,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         clone.microGroup = this.microGroup;
         return clone;
     }
-
     @Override
     public String toString() {
         return "Nibblonian{" +
@@ -348,44 +329,52 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
                 '}';
     }
     // print() method
-
     public void print() {
         System.out.println(this);
     }
-
     public ImageView getImageView() {
         return image;
     }
-
     public void setImage(ImageView image) {
         this.image = image;
     }
-
     public Line getHealth() {
         return health;
     }
-
     public void setHealth(Line health) {
         this.health = health;
     }
-
     public Rectangle getBorder() {
         return border;
     }
-
     public void setBorder(Rectangle border) {
         this.border = border;
     }
-
-
-
-
-
     public Group getMicroGroup() {
         return microGroup;
     }
 
     public void setMicroGroup(Group microGroup) {
         this.microGroup = microGroup;
+    }
+
+    public String getInfo() {
+        StringBuilder result = new StringBuilder();
+        String[] info = new String[7];
+        AtomicInteger indexThroughArray = new AtomicInteger(0);
+        Long[] idOfDevices = new Long[devices.size()];
+        devices.forEach(device -> idOfDevices[indexThroughArray.getAndIncrement()] = device.getId());
+        Arrays.sort(idOfDevices);
+        info[0] = "\n" + "Id: " + getId() + "\n";
+        info[1] = "Name: " + getName() + "\n";
+        info[2] = "X: " + getPosX() + "\n";
+        info[3] = "Y: " + getPosY() + "\n";
+        info[4] = "Health: " + getHealthValue() + "\n";
+        info[5] = "Distance: " + getDistanceTravelled() + "\n";
+        info[6] = "Transformed devices: " + Arrays.toString(idOfDevices) + "\n";
+        for (String i : info) {
+            result.append(i);
+        }
+        return result.toString();
     }
 }

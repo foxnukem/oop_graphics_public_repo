@@ -1,17 +1,18 @@
 package com.example.oop_graphics;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -34,8 +35,9 @@ public class Main extends Application {
     private static double scrollY;
     private final static Pane infoPane = new Pane();
     private static boolean infoEnabled = false;
-
-    private static ArrayList<Nibblonian> microObjectsForInfoPane;
+    private final static ScrollPane infoScrollPane = new ScrollPane();
+    private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
+    private final static Text infoInText = new Text();
     private final static NewNewYork newNewYork = new NewNewYork(5);
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
@@ -45,7 +47,7 @@ public class Main extends Application {
     private static Scene scene;
     @Override
     public void start(Stage stage) {
-        newNewYork.addDevice(new Device(800, 800));
+        newNewYork.addDevice(new Device(200, 200));
         newNewYork.addDevice(new Device(10, 10));
         newNewYork.addCitizen(new Nibblonian());
         newNewYork.addCitizen(new Fry());
@@ -53,7 +55,9 @@ public class Main extends Application {
         newNewYork.addCitizen(new RobotSanta());
 
         newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(0));
-        newNewYork.getCitizens().get(2).interactWithMacro(newNewYork.getDevices().get(0));
+        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(0));
+        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(1));
+        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(1));
 
         initInfoPane();
 
@@ -73,26 +77,49 @@ public class Main extends Application {
                     // Move left
                     if (keyEvent.getCode() == KeyCode.H) {
                         n.moveLeft();
+                        activatedObjectsInfo.clear();
                     }
                     // Move down
                     if (keyEvent.getCode() == KeyCode.J) {
                         n.moveDown();
+                        activatedObjectsInfo.clear();
                     }
                     // Move up
                     if (keyEvent.getCode() == KeyCode.K) {
                         n.moveUp();
+                        activatedObjectsInfo.clear();
                     }
                     // Move right
                     if (keyEvent.getCode() == KeyCode.L) {
                         n.moveRight();
+                        activatedObjectsInfo.clear();
                     }
                     // Delete activated
                     if (keyEvent.getCode() == KeyCode.DELETE) {
                         newNewYork.removeCitizen(n);
+                        activatedObjectsInfo.clear();
                     }
                     // Cancel activation
                     if (keyEvent.getCode() == KeyCode.ESCAPE) {
                         n.cancelActivation();
+                        infoEnabled = false;
+                        updateInfo();
+                        activatedObjectsInfo.clear();
+                    }
+                    // Activated info open
+                    if (keyEvent.getCode() == KeyCode.I) {
+                        infoEnabled = true;
+                        if (!activatedObjectsInfo.contains(n.getInfo())) {
+                            activatedObjectsInfo.add(n.getInfo());
+                            activatedObjectsInfo.add("");
+                        }
+                        updateInfo();
+                    }
+                    // Activated info close
+                    if (keyEvent.getCode() == KeyCode.O) {
+                        infoEnabled = false;
+                        activatedObjectsInfo.clear();
+                        updateInfo();
                     }
                 }
             }
@@ -111,24 +138,25 @@ public class Main extends Application {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            }
-
-            // Activated info
-            if (keyEvent.getCode() == KeyCode.I) {
-                infoEnabled = !infoEnabled;
-                updateInfo();
+                activatedObjectsInfo.clear();
             }
         });
         scrollPane.viewportBoundsProperty().addListener((observableValue, bounds, t1) -> {
-            scrollX = -1 * (int) t1.getMinX();
-            scrollY = -1 * (int) t1.getMinY();
-
-            System.out.println("X: " +scrollX + " Y: "  + scrollY);
+            scrollX = -1 * t1.getMinX();
+            scrollY = -1 * t1.getMinY();
+            newNewYork.getMiniMap().moveMapArea(scrollX * MiniMap.getScale().getX() + 0.5 * newNewYork.getMiniMap().getMapArea().getWidth(), scrollY * MiniMap.getScale().getY() + 0.5 * newNewYork.getMiniMap().getMapArea().getHeight());
         });
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+
+            }
+        };
         stage.setTitle("Futurama. The Game");
         stage.setMaximized(true);
-//        stage.setResizable(false);
+        stage.setResizable(false);
         stage.setScene(scene);
+        timer.start();
         stage.show();
     }
 
@@ -143,23 +171,26 @@ public class Main extends Application {
     }
 
     public void initInfoPane() {
-        Rectangle container = new Rectangle(0, 0, newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
-        infoPane.setMinSize(newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
-        infoPane.setPrefSize(newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
-        infoPane.setMaxSize(newNewYork.getMiniMap().getMiniMapWidth(), newNewYork.getMiniMap().getMiniMapHeight());
-        Label name = new Label("Ім'я: \n");
-        Label level = new Label("Рівень: \n");
-        Label health = new Label("Здоров'я: \n");
-        Label travelledDistance = new Label("Пройдена відстань: \n");
-        Label devices = new Label("Опрацьовані: ");
-        container.setFill(Color.GRAY);
-        infoPane.getChildren().addAll(container, name, level, health, travelledDistance, devices);
+        infoPane.setMinSize(MiniMap.getMiniMapWidth(), MiniMap.getMiniMapHeight());
+        infoPane.setPrefSize(MiniMap.getMiniMapWidth() + 70, MiniMap.getMiniMapHeight() + 70);
+        infoPane.setMaxSize(MiniMap.getMiniMapWidth() + 70, MiniMap.getMiniMapHeight() + 70);
+        infoScrollPane.setMinSize(MiniMap.getMiniMapWidth(), MiniMap.getMiniMapHeight());
+        infoScrollPane.setPrefSize(MiniMap.getMiniMapWidth() + 70, MiniMap.getMiniMapHeight() + 70);
+        infoScrollPane.setMaxSize(MiniMap.getMiniMapWidth() + 70, MiniMap.getMiniMapHeight() + 70);
+        infoScrollPane.setFitToWidth(true);
+        infoScrollPane.setContent(infoInText);
+        infoInText.setFill(Color.BLACK);
+        infoInText.setFont(new Font("Arial", 14));
+        infoPane.getChildren().addAll(infoScrollPane);
         infoPane.setOpacity(0);
     }
     public void updateInfo() {
         if (infoEnabled) {
-            infoPane.setOpacity(1);
+            infoPane.setOpacity(0.65);
             infoPane.toFront();
+            infoInText.setText("");
+            activatedObjectsInfo.forEach(str -> infoInText.setText(infoInText.getText() + str));
+            infoScrollPane.setContent(infoInText);
         } else {
             infoPane.setOpacity(0);
             infoPane.toBack();

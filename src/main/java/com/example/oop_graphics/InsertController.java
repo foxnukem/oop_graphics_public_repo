@@ -1,15 +1,11 @@
 package com.example.oop_graphics;
 
-import com.almasb.fxgl.ui.property.DoublePropertyView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.InputEvent;
 import javafx.stage.Stage;
 
-import javax.crypto.spec.PSource;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;

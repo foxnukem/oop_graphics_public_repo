@@ -86,6 +86,7 @@ public class MiniMap {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                 if (!isTransparent) {
                     moveMapArea(mouseEvent.getX(), mouseEvent.getY());
+                    moveBigMap(mouseEvent.getX(), mouseEvent.getY());
                 }
             }
             if (mouseEvent.getButton() == MouseButton.MIDDLE) {
@@ -129,25 +130,37 @@ public class MiniMap {
         pane.getChildren().add(deviceGroups.get(device));
     }
     public void moveMapArea(double posX, double posY) {
-        if (posX < 0.5 * mapArea.getWidth()) {
+        if (posX < mapArea.getWidth() / 2) {
             mapArea.setX(0);
-            Main.getScrollPane().setHvalue(0);
         } else if (posX > miniMapWidth - mapArea.getWidth() / 2) {
             mapArea.setX(miniMapWidth - mapArea.getWidth());
-            Main.getScrollPane().setHvalue(1);
         } else {
             mapArea.setX(posX - mapArea.getWidth() / 2);
-            Main.getScrollPane().setHvalue(posX / pane.getWidth());
         }
 
         if (posY < mapArea.getHeight() / 2) {
             mapArea.setY(0);
-            Main.getScrollPane().setVvalue(0);
         } else if (posY > miniMapHeight - mapArea.getHeight() / 2) {
             mapArea.setY(miniMapHeight - mapArea.getHeight());
-            Main.getScrollPane().setVvalue(1);
         } else {
             mapArea.setY(posY - mapArea.getHeight() / 2);
+        }
+    }
+
+    public void moveBigMap(double posX, double posY) {
+        if (posX < 0.5 * mapArea.getWidth()) {
+            Main.getScrollPane().setHvalue(0);
+        } else if (posX > miniMapWidth - mapArea.getWidth() / 2) {
+            Main.getScrollPane().setHvalue(1);
+        } else {
+            Main.getScrollPane().setHvalue(posX / pane.getWidth());
+        }
+
+        if (posY < mapArea.getHeight() / 2) {
+            Main.getScrollPane().setVvalue(0);
+        } else if (posY > miniMapHeight - mapArea.getHeight() / 2) {
+            Main.getScrollPane().setVvalue(1);
+        } else {
             Main.getScrollPane().setVvalue(posY / pane.getHeight());
         }
     }
@@ -159,7 +172,7 @@ public class MiniMap {
         pane.getChildren().addAll(temporaryPane.getChildren());
         temporaryPane.getChildren().removeAll(temporaryPane.getChildren());
     }
-    public double getMiniMapHeight() {
+    public static double getMiniMapHeight() {
         return miniMapHeight;
     }
 
@@ -167,7 +180,7 @@ public class MiniMap {
         MiniMap.miniMapHeight = miniMapHeight;
     }
 
-    public double getMiniMapWidth() {
+    public static double getMiniMapWidth() {
         return miniMapWidth;
     }
 

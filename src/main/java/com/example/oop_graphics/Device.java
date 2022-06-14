@@ -36,8 +36,8 @@ public class Device {
         return posY;
     }
 
-    private double posX;
-    private double posY;
+    private final double posX;
+    private final double posY;
     private final double width;
     private final double height;
     private final Text statusInText;
@@ -64,15 +64,13 @@ public class Device {
        destroyedColor = Color.BROWN;
 
     }
-
     public double getWidth() {
         return width;
     }
-
     public double getHeight() {
         return height;
     }
-
+    
     {
         width = 200;
         height = 200;
