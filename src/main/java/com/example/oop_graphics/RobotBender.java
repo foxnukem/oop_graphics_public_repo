@@ -30,15 +30,15 @@ public class RobotBender extends Fry {
     public RobotBender() {
         this("Бендер", 1200, 1000);
     }
-    private void destroyBomb(Device device) {
-        if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.DESTROYEDBOMB)) {
+    private void destroyThisBomb(Device device) {
+        if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
         }
     }
     @Override
     public void interactWithMacro(Device device) {
-        this.destroyBomb(device);
+        destroyThisBomb(device);
     }
     public int getInitialHealthValue() {
         return initialHealthValue;

@@ -28,8 +28,8 @@ public class Fry extends Nibblonian {
     public Fry() {
         this("Фрай", 1100, 1000);
     }
-    public void stopTimer(Device device) {
-        if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.STOPPEDTIMER)) {
+    private void stopTimerOnThisDevice(Device device) {
+        if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
         }
@@ -40,7 +40,7 @@ public class Fry extends Nibblonian {
     }
     @Override
     public void interactWithMacro(Device device) {
-        this.stopTimer(device);
+        stopTimerOnThisDevice(device);
     }
     public int getInitialHealthValue() {
         return initialHealthValue;

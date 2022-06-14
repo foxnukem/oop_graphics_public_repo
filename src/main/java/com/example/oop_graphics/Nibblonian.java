@@ -95,9 +95,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this("Жуйка", 1000, 1000);
     }
 
-    public void moveTo(double x, double y) {
-
-    }
     public void moveUp() {
         this.posY -= this.getStep();
         if (this.posY <= 0.0) {
@@ -138,8 +135,8 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.setPosX(this.posX);
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
     }
-    public void markDeviceAsSafe(Device device) {
-        if (!this.devices.contains(device) && device.setStatus(this, Device.DeviceStatus.SAFE)) {
+    private void markThisDeviceAsSafe(Device device) {
+        if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
         }
@@ -154,20 +151,26 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         }
     }
     public void regenerate() {
-        if ((this.healthValue + getRegenerateRate()) >= getInitialHealthValue()) {
-            this.healthValue = getInitialHealthValue();
-            this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
-        } else {
-            this.healthValue += getRegenerateRate();
-            this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
+        if (this.getMicroGroup().getBoundsInParent().intersects(Main.getWorld().getPlanetExpressOffice().getPlanetExpressArea().getBoundsInParent())) {
+            if ((this.healthValue + getRegenerateRate()) >= getInitialHealthValue()) {
+                this.healthValue = getInitialHealthValue();
+                this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
+            } else {
+                this.healthValue += getRegenerateRate();
+                this.health.setEndX((healthValue * (width - 10)) / getInitialHealthValue() + health.getStartX());
+            }
         }
     }
-    public void damageOther(RobotSanta robotSanta) {
-        robotSanta.getHurt();
-        this.getHurt();
+    public void damageOtherSide() {
+        for (Nibblonian citizen : Main.getWorld().getCitizens()) {
+            if (!this.equals(citizen) && this.getMicroGroup().getBoundsInParent().intersects(citizen.getMicroGroup().getBoundsInParent()) && citizen instanceof RobotSanta) {
+                citizen.getHurt();
+                this.getHurt();
+            }
+        }
     }
     public void interactWithMacro(Device device) {
-        markDeviceAsSafe(device);
+        markThisDeviceAsSafe(device);
     }
     public void setActive(boolean active) {
         isActive = active;
@@ -180,7 +183,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         border.setOpacity(0);
         objectId.setOpacity(0);
     }
-    private void activate() {
+    public void activate() {
         isActive = true;
         border.setOpacity(1);
         objectId.setOpacity(1);
@@ -193,6 +196,20 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         if (!isActive) {
             cancelActivation();
         }
+    }
+    public void lifeCycle(int time) {
+        for (Device device : Main.getWorld().getDevices()) {
+            if (this.getMicroGroup().getBoundsInParent().intersects(device.getMacroGroup().getBoundsInParent())) {
+                interactWithMacro(device);
+            }
+        }
+        if (time % 30 == 0) {
+            regenerate();
+            damageOtherSide();
+        }
+    }
+    public void autoMove() {
+
     }
     public String getName() {
         return name;

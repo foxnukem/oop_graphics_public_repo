@@ -48,10 +48,10 @@ public class Main extends Application {
         newNewYork.addCitizen(new RobotBender());
         newNewYork.addCitizen(new RobotSanta());
 
-        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(0));
-        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(0));
-        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(1));
-        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(1));
+//        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(0));
+//        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(0));
+//        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(1));
+//        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(1));
 
         initInfoPane();
 
@@ -153,9 +153,22 @@ public class Main extends Application {
             newNewYork.getMiniMap().moveMapArea(scrollX * MiniMap.getScale().getX() + 0.5 * newNewYork.getMiniMap().getMapArea().getWidth(), scrollY * MiniMap.getScale().getY() + 0.5 * newNewYork.getMiniMap().getMapArea().getHeight());
         });
         AnimationTimer timer = new AnimationTimer() {
+            private int frame;
+            @Override
+            public void start() {
+                frame = 0;
+                super.start();
+            }
             @Override
             public void handle(long l) {
-
+                if (frame < 60) {
+                    frame++;
+                } else {
+                    frame = 0;
+                }
+                for (Nibblonian citizen : getWorld().getCitizens()) {
+                    citizen.lifeCycle(frame);
+                }
             }
         };
         stage.setTitle("Futurama. The Game");

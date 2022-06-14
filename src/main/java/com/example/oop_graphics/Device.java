@@ -83,56 +83,43 @@ public class Device {
         macroGroup.setLayoutX(posX);
         macroGroup.setLayoutY(posY);
     }
-    public boolean setStatus(Nibblonian nibblonian, DeviceStatus status) {
-        if (status.equals(DeviceStatus.SAFE)
-            && !this.status.equals(DeviceStatus.ACTIVEBOMB)) {
-            this.status = status;
-            this.statusInText.setText(this.status.toString());
-            this.border.setFill(safeColor);
+    public boolean changeStatusBecauseOf(Nibblonian nibblonian) {
+        if (status.equals(DeviceStatus.UNDEFINED)) {
+            status = DeviceStatus.SAFE;
+            statusInText.setText(status.toString());
+            border.setFill(safeColor);
             NewNewYork.update();
             return true;
-        } else if (this.status.equals(DeviceStatus.UNDEFINED)) {
-            return false;
-        } else {
-            System.out.println("Не дозволено для об'єктів класу Nibblonian");
         }
         return false;
     }
-    public boolean setStatus(Fry fry, DeviceStatus status) {
-        if (status.equals(DeviceStatus.STOPPEDTIMER)
-            && this.status.equals(DeviceStatus.ACTIVEBOMB)) {
-            this.status = status;
-            this.statusInText.setText(this.status.toString());
-            this.border.setFill(stoppedTimerColor);
-            NewNewYork.update();
-            return true;
-        } else if (status.equals(DeviceStatus.DESTROYEDBOMB)
-                || this.status.equals(DeviceStatus.ACTIVEBOMB)) {
-            System.out.println("Не дозволено для об'єктів класу Fry");
-        }
-        return setStatus((Nibblonian) fry, status);
-    }
-    public boolean setStatus(RobotBender robotBender, DeviceStatus status) {
-        if (status.equals(DeviceStatus.DESTROYEDBOMB)
-            && this.status.equals(DeviceStatus.ACTIVEBOMB)) {
-            this.status = status;
-            this.statusInText.setText(this.status.toString());
-            this.border.setFill(destroyedColor);
+    public boolean changeStatusBecauseOf(Fry fry) {
+        if (status.equals(DeviceStatus.ACTIVEBOMB)) {
+            status = DeviceStatus.STOPPEDTIMER;
+            statusInText.setText(status.toString());
+            border.setFill(stoppedTimerColor);
             NewNewYork.update();
             return true;
         }
-        return setStatus((Fry)robotBender, status);
+        return changeStatusBecauseOf((Nibblonian) fry);
     }
-    public boolean setStatus(RobotSanta robotSanta, DeviceStatus status) {
-        if (status.equals(DeviceStatus.ACTIVEBOMB)
-            && this.status.equals(DeviceStatus.UNDEFINED)) {
-            this.status = status;
-            this.statusInText.setText(this.status.toString());
-            this.border.setFill(activeColor);
+    public boolean changeStatusBecauseOf(RobotBender robotBender) {
+        if (status.equals(DeviceStatus.ACTIVEBOMB)) {
+            status = DeviceStatus.DESTROYEDBOMB;
+            statusInText.setText(status.toString());
+            border.setFill(destroyedColor);
             NewNewYork.update();
             return true;
-        } else if (!status.equals(DeviceStatus.UNDEFINED)) {
-            System.out.println("Не дозволено для об'єктів класу RobotSanta");
+        }
+        return changeStatusBecauseOf((Nibblonian) robotBender);
+    }
+    public boolean changeStatusBecauseOf(RobotSanta robotSanta) {
+        if (status.equals(DeviceStatus.UNDEFINED)) {
+            status = DeviceStatus.ACTIVEBOMB;
+            statusInText.setText(this.status.toString());
+            border.setFill(activeColor);
+            NewNewYork.update();
+            return true;
         }
         return false;
     }
