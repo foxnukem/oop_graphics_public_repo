@@ -117,13 +117,13 @@ public class Main extends Application {
                 }
             }
             // Move quicker
-//            if (keyEvent.getCode() == KeyCode.Y) {
-//
-//            }
+            if (keyEvent.getCode() == KeyCode.Y) {
+
+            }
             // Move slower
-//            if (keyEvent.getCode() == KeyCode.U) {
-//
-//            }
+            if (keyEvent.getCode() == KeyCode.U) {
+
+            }
             // Dialog for adding microobjects
             if (keyEvent.getCode() == KeyCode.INSERT) {
                 try {

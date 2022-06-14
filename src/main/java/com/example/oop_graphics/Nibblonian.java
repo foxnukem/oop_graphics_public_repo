@@ -279,11 +279,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public Group getMicroGroup() {
         return microGroup;
     }
-
     public void setMicroGroup(Group microGroup) {
         this.microGroup = microGroup;
     }
-
     public String getInfo() {
         StringBuilder result = new StringBuilder();
         String[] info = new String[7];
