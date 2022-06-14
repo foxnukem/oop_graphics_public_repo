@@ -7,7 +7,7 @@ import java.io.File;
 
 public class Fry extends Nibblonian {
     private static final int initialHealthValue = 150;
-    private static final int hurtRate = 3;
+    private static final int hurtRate = 5;
     private static final int regenerateRate = 8;
     private static final double step = 10.0;
     private static final double speed = 0.0;

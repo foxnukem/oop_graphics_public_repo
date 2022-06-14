@@ -48,11 +48,6 @@ public class Main extends Application {
         newNewYork.addCitizen(new RobotBender());
         newNewYork.addCitizen(new RobotSanta());
 
-//        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(0));
-//        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(0));
-//        newNewYork.getCitizens().get(3).interactWithMacro(newNewYork.getDevices().get(1));
-//        newNewYork.getCitizens().get(1).interactWithMacro(newNewYork.getDevices().get(1));
-
         initInfoPane();
 
         scrollPane.setPannable(true);
@@ -99,6 +94,8 @@ public class Main extends Application {
                         infoEnabled = false;
                         updateInfo();
                         activatedObjectsInfo.clear();
+                    } else {
+                        activatedObjectsInfo.clear(); // Prevents repeating in microobjects info
                     }
                     // Activated info open
                     if (keyEvent.getCode() == KeyCode.I) {
@@ -167,7 +164,7 @@ public class Main extends Application {
                     frame = 0;
                 }
                 for (Nibblonian citizen : getWorld().getCitizens()) {
-                    citizen.lifeCycle(frame);
+                    citizen.interactionWithWorld(frame);
                 }
             }
         };

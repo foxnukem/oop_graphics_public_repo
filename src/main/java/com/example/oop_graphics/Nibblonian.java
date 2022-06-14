@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final int initialHealthValue = 100;
-    private static final int hurtRate = 2;
+    private static final int hurtRate = 5;
     private static final int regenerateRate = 10;
     private static final double step = 7.0;
     private static final double speed = 0.0;
@@ -43,49 +43,49 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
 
     public Nibblonian(String name, double initialPosX, double initialPosY) {
         this.name = name;
-        this.id = Main.startId++;
-        this.healthValue = getInitialHealthValue();
-        this.distanceTravelled = 0.0;
-        this.devices = new ArrayList<>();
-        this.isBad = false;
-        this.transformedDevices = new Text("0");
-        this.objectId = new Text(Long.toString(id));
+        id = Main.startId++;
+        healthValue = getInitialHealthValue();
+        distanceTravelled = 0.0;
+        devices = new ArrayList<>();
+        isBad = false;
+        transformedDevices = new Text("0");
+        objectId = new Text(Long.toString(id));
 
-        this.posX = initialPosX;
-        this.posY = initialPosY;
-        this.width = 54;
-        this.height = 70;
+        posX = initialPosX;
+        posY = initialPosY;
+        width = 54;
+        height = 70;
         try {
-            this.image = new ImageView(new Image(new File("src/images/nibblonian.png").toURI().toString()));
+            image = new ImageView(new Image(new File("src/images/nibblonian.png").toURI().toString()));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        this.border = new Rectangle(0, 0, this.width, this.height);
-        this.border.setStrokeWidth(6.5);
-        this.border.setFill(Color.TRANSPARENT);
-        this.border.setStroke(Color.PURPLE);
-        this.border.setOpacity(0);
+        border = new Rectangle(0, 0, this.width, this.height);
+        border.setStrokeWidth(6.5);
+        border.setFill(Color.TRANSPARENT);
+        border.setStroke(Color.PURPLE);
+        border.setOpacity(0);
 
-        this.health = new Line();
-        this.health.setStroke(Color.GREEN);
-        this.health.setStrokeWidth(5);
-        this.health.setStartX(5);
-        this.health.setStartY(10);
-        this.health.setEndX(this.health.getStartX() + this.width - 10);
-        this.health.setEndY(this.health.getStartY());
+        health = new Line();
+        health.setStroke(Color.GREEN);
+        health.setStrokeWidth(5);
+        health.setStartX(5);
+        health.setStartY(10);
+        health.setEndX(health.getStartX() + width - 10);
+        health.setEndY(health.getStartY());
 
-        this.transformedDevices.setX(5);
-        this.transformedDevices.setY(10);
+        transformedDevices.setX(5);
+        transformedDevices.setY(10);
 
-        this.objectId.setX(30);
-        this.objectId.setY(5);
-        this.objectId.setFill(Color.AZURE);
-        this.objectId.setOpacity(0);
+        objectId.setX(30);
+        objectId.setY(5);
+        objectId.setFill(Color.AZURE);
+        objectId.setOpacity(0);
 
-        this.microGroup = new Group(image, health, transformedDevices, border, objectId);
-        this.microGroup.setLayoutX(this.posX);
-        this.microGroup.setLayoutY(this.posY);
-        this.microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> activateDeactivateBorder());
+        microGroup = new Group(image, health, transformedDevices, border, objectId);
+        microGroup.setLayoutX(posX);
+        microGroup.setLayoutY(posY);
+        microGroup.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent -> activateDeactivateBorder());
     }
     public Nibblonian(double initialPosX, double initialPosY, boolean isActive) {
         this("Жуйка", initialPosX, initialPosY);
@@ -197,7 +197,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             cancelActivation();
         }
     }
-    public void lifeCycle(int time) {
+    public void interactionWithWorld(int time) {
         for (Device device : Main.getWorld().getDevices()) {
             if (this.getMicroGroup().getBoundsInParent().intersects(device.getMacroGroup().getBoundsInParent())) {
                 interactWithMacro(device);
