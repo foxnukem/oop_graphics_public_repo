@@ -23,14 +23,9 @@ import java.util.Objects;
 public class Main extends Application {
     public static long startId = 1000;
     public static long deviceStartId = 100;
+    public static double speedCoefficient;
     private final static int viewPortWidth = 1920;
     private final static int viewPortHeight = 1080;
-    public static int getViewportWidth() {
-        return viewPortWidth;
-    }
-    public static int getViewPortHeight() {
-        return viewPortHeight;
-    }
     private static double scrollX;
     private static double scrollY;
     private final static Pane infoPane = new Pane();
@@ -41,9 +36,6 @@ public class Main extends Application {
     private final static NewNewYork newNewYork = new NewNewYork(5);
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
-    public static ScrollPane getScrollPane() {
-        return scrollPane;
-    }
     private static Scene scene;
 
     @Override
@@ -160,9 +152,6 @@ public class Main extends Application {
         timer.start();
         stage.show();
     }
-    public static NewNewYork getWorld() {
-        return Main.newNewYork;
-    }
     public void insertNewMicro(Stage stage) throws IOException {
         Scene scene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("insert.fxml"))));
         Stage window = new Stage();
@@ -198,8 +187,19 @@ public class Main extends Application {
             infoPane.toBack();
         }
     }
+    public static NewNewYork getWorld() {
+        return Main.newNewYork;
+    }
+    public static int getViewportWidth() {
+        return viewPortWidth;
+    }
+    public static int getViewPortHeight() {
+        return viewPortHeight;
+    }
+    public static ScrollPane getScrollPane() {
+        return scrollPane;
+    }
     public static void main(String[] args) {
         launch();
     }
-
 }
