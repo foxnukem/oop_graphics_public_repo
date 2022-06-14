@@ -2,12 +2,16 @@ package com.example.oop_graphics;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -18,7 +22,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 public class Main extends Application {
@@ -35,13 +42,30 @@ public class Main extends Application {
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
     private static boolean isSpawned = false;
-    private final static NewNewYork newNewYork = new NewNewYork(5);
+    private final static NewNewYork newNewYork = new NewNewYork();
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
     private static Scene scene;
 
     @Override
     public void start(Stage stage) {
+        newNewYork.addDevice(new Device(600, 200));
+        newNewYork.addDevice(new Device(2000, 200));
+        newNewYork.addDevice(new Device(2500, 400));
+        newNewYork.addDevice(new Device(1400, 1500));
+        newNewYork.addDevice(new Device(2300, 2600));
+        newNewYork.addDevice(new Device(1800, 1800));
+        newNewYork.addDevice(new Device(1200, 2200));
+        newNewYork.addDevice(new Device(200, 2400));
+        newNewYork.addDevice(new Device(3000, 1600));
+        newNewYork.addDevice(new Device(500, 2100));
+        newNewYork.addDevice(new Device(3000, 900));
+        newNewYork.addDevice(new Device(1900, 1200));
+        newNewYork.addDevice(new Device(100, 1600));
+        newNewYork.addDevice(new Device(3700, 300));
+        newNewYork.addDevice(new Device(3500, 1900));
+        newNewYork.addDevice(new Device(1000, 1500));
+
         initInfoPane();
 
         scrollPane.setPannable(true);
@@ -111,6 +135,7 @@ public class Main extends Application {
                 if (!isSpawned) {
                     spawnObjects();
                     isSpawned = true;
+                    NewNewYork.update();
                 }
             }
             // Move quicker
@@ -120,6 +145,24 @@ public class Main extends Application {
             // Move slower
             if (keyEvent.getCode() == KeyCode.U) {
                 decreaseSpeed();
+            }
+            // The most efficient worker in Planet Express
+            if (keyEvent.getCode() == KeyCode.W) {
+                Collections.sort(getWorld().getPlanetExpressOffice().getTeamMembers());
+                Alert congrats = new Alert(Alert.AlertType.INFORMATION);
+                congrats.setTitle("Інформація");
+                congrats.setHeaderText("Найефективніший працівник Міжпланетного Експресу");
+                congrats.setContentText(getWorld().getPlanetExpressOffice().getTeamMembers().get(getWorld().getPlanetExpressOffice().getTeamMembers().size() - 1).getInfo());
+                congrats.showAndWait();
+            }
+            // The most efficient worker in Mom Corp
+            if (keyEvent.getCode() == KeyCode.E) {
+                Collections.sort(getWorld().getMomFriendlyRobots().getRobotSantas());
+                Alert congrats = new Alert(Alert.AlertType.INFORMATION);
+                congrats.setTitle("Інформація");
+                congrats.setHeaderText("Найефективніший працівник корпорації \"Мамині дружні роботи\"");
+                congrats.setContentText(getWorld().getMomFriendlyRobots().getRobotSantas().get(getWorld().getMomFriendlyRobots().getRobotSantas().size() - 1).getInfo());
+                congrats.showAndWait();
             }
             // Dialog for adding microobjects
             if (keyEvent.getCode() == KeyCode.INSERT) {
@@ -150,9 +193,11 @@ public class Main extends Application {
         });
         AnimationTimer timer = new AnimationTimer() {
             private int frame;
+            private double timer;
             @Override
             public void start() {
                 frame = 0;
+                timer = 0;
                 super.start();
             }
             @Override
@@ -164,6 +209,18 @@ public class Main extends Application {
                 }
                 for (Nibblonian citizen : getWorld().getCitizens()) {
                     citizen.interactionWithWorld(frame);
+                }
+                for (Device device : getWorld().getDevices()) {
+                    if (device.getStatus() == Device.DeviceStatus.ACTIVEBOMB && frame % 2 == 0) {
+                        timer += 0.001;
+                    }
+                }
+                if (timer >= 1) {
+                    Alert youLose = new Alert(Alert.AlertType.INFORMATION);
+                    youLose.setTitle("Бабах!");
+                    youLose.setContentText("Залишилась як мінімум одна активна бомба. Ви програли!");
+                    Platform.runLater(youLose::showAndWait);
+                    this.stop();
                 }
             }
         };
@@ -226,8 +283,7 @@ public class Main extends Application {
         speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
     }
     public void spawnObjects() {
-        newNewYork.addDevice(new Device(200, 200));
-        newNewYork.addDevice(new Device(10, 10));
+
         newNewYork.addCitizen(new Nibblonian());
         newNewYork.addCitizen(new Fry());
         newNewYork.addCitizen(new RobotBender());

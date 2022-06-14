@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -211,6 +212,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void autoMove() {
 
     }
+    public void moveTo(double posX, double posY) {
+
+    }
     public String getName() {
         return name;
     }
@@ -319,13 +323,13 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         Long[] idOfDevices = new Long[devices.size()];
         devices.forEach(device -> idOfDevices[indexThroughArray.getAndIncrement()] = device.getId());
         Arrays.sort(idOfDevices);
-        info[0] = "\n" + "Ідентифікатор: " + getId() + "\n";
+        info[0] = "Ідентифікатор: " + getId() + "\n";
         info[1] = "Ім'я: " + getName() + "\n";
         info[2] = "X: " + getPosX() + "\n";
         info[3] = "Y: " + getPosY() + "\n";
         info[4] = "Здоров'я: " + getHealthValue() + "\n";
         info[5] = "Пройдена відстань: " + getDistanceTravelled() + "\n";
-        info[6] = "Модифіковані пристрої: " + Arrays.toString(idOfDevices) + "\n";
+        info[6] = "Модифіковані пристрої: " + Arrays.toString(idOfDevices) + "\n\n";
         for (String i : info) {
             result.append(i);
         }
@@ -333,13 +337,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     @Override
     public int compareTo(Nibblonian n) {
-        if (this.devices.size() == n.devices.size() && this.healthValue < n.healthValue) {
+        if (this.devices.size() < n.devices.size()) {
             return -1;
-        } else if (this.devices.size() < n.devices.size() && this.healthValue == n.healthValue) {
-            return -1;
-        } else if (this.devices.size() == n.devices.size() && this.healthValue > n.healthValue) {
-            return 1;
-        } else if (this.devices.size() > n.devices.size() && this.healthValue == n.healthValue) {
+        } else if (this.devices.size() > n.devices.size()) {
             return 1;
         }
         return 0;
@@ -372,9 +372,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
                 ", isActive=" + isActive +
                 ", healthValue=" + healthValue +
                 ", distanceTravelled=" + distanceTravelled +
-                ", devices=" + devices +
                 ", posX=" + posX +
                 ", posY=" + posY +
+                ", devices=" + devices +
                 '}';
     }
 }

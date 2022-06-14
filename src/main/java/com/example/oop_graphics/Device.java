@@ -132,7 +132,6 @@ public class Device {
     public double getPosX() {
         return posX;
     }
-
     public double getPosY() {
         return posY;
     }

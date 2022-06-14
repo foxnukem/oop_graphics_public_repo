@@ -61,13 +61,13 @@ public class Fry extends Nibblonian {
     public String toString() {
         return "Fry{" +
                 "name='" + getName() + '\'' +
-                ", bad=" + isBad() +
-                ", posX=" + getPosX() +
-                ", posY=" + getPosY() +
-                ", width=" + getWidth() +
-                ", height=" + getHeight() +
+                ", id=" + getId() +
+                ", isBad=" + isBad() +
+                ", isActive=" + isActive() +
                 ", healthValue=" + getHealthValue() +
                 ", distanceTravelled=" + getDistanceTravelled() +
+                ", posX=" + getPosX() +
+                ", posY=" + getPosY() +
                 ", devices=" + getDevices() +
                 '}';
     }

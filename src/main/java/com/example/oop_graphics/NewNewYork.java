@@ -14,7 +14,6 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NewNewYork {
-    private final static Random random = new Random(System.currentTimeMillis());
     private static ArrayList<Device> devices;
     // Problem: https://stackoverflow.com/questions/37104215/error-exception-in-thread-javafx-application-thread
     // Solution:https://stackoverflow.com/questions/6916385/is-there-a-concurrent-list-in-javas-jdk
@@ -59,7 +58,7 @@ public class NewNewYork {
         citizens = new CopyOnWriteArrayList<>();
     }
 
-    public NewNewYork(int numberOfDevices) {
+    public NewNewYork() {
         devices = new ArrayList<>();
         root.setMinWidth(rootWidth);
         root.setMinHeight(rootHeight);
