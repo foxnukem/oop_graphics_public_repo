@@ -9,7 +9,7 @@ public class RobotBender extends Fry {
     private static final int initialHealthValue = 200;
     private static final int hurtRate = 5;
     private static final int regenerateRate = 10;
-    private static final double step = 15.0;
+    private static final double step = 12.0;
 
     public RobotBender(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);

@@ -9,7 +9,7 @@ public class Fry extends Nibblonian {
     private static final int initialHealthValue = 150;
     private static final int hurtRate = 5;
     private static final int regenerateRate = 8;
-    private static final double step = 10.0;
+    private static final double step = 8.0;
     public Fry(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
