@@ -212,8 +212,6 @@ public class Main extends Application {
                 } else {
                     frame = 0;
                 }
-                getWorld().getPlanetExpressOffice().lifeCycle();
-                getWorld().getMomFriendlyRobots().lifeCycle();
                 for (Nibblonian citizen : getWorld().getCitizens()) {
                     citizen.interactionWithWorld(frame);
                 }
