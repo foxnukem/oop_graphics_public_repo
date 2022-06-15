@@ -10,7 +10,6 @@ public class RobotBender extends Fry {
     private static final int hurtRate = 5;
     private static final int regenerateRate = 10;
     private static final double step = 15.0;
-    private static final double speed = 0.0;
 
     public RobotBender(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
@@ -28,15 +27,17 @@ public class RobotBender extends Fry {
     public RobotBender() {
         this("Бендер", Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth() - (Main.startId % 10) * 21, Main.getWorld().getPlanetExpressOffice().getPosY() + (Main.startId % 100) * 22);
     }
-    private void destroyThisBomb(Device device) {
+    private Device destroyThisBomb(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
+            return device;
         }
+        return null;
     }
     @Override
-    public void interactWithMacro(Device device) {
-        destroyThisBomb(device);
+    public Device interactWithMacro(Device device) {
+        return destroyThisBomb(device);
     }
     public int getInitialHealthValue() {
         return initialHealthValue;
@@ -49,9 +50,6 @@ public class RobotBender extends Fry {
     }
     public double getStep() {
         return step;
-    }
-    public double getSpeed() {
-        return speed * Main.speedCoefficient;
     }
     @Override
     public String toString() {

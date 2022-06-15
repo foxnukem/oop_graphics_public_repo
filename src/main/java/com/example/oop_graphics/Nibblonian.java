@@ -12,7 +12,6 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,7 +20,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private static final int hurtRate = 5;
     private static final int regenerateRate = 10;
     private static final double step = 7.0;
-    private static final double speed = 0.0;
 
     private String name;
     private final long id;
@@ -97,50 +95,52 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
 
     public void moveUp() {
-        this.posY -= this.getStep();
+        this.posY -= this.getStep() + Main.speed;
         if (this.posY <= 0.0) {
             this.posY = 0.0;
         } else {
-            distanceTravelled += getStep();
+            distanceTravelled += getStep() + Main.speed;
         }
         this.setPosY(posY);
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
     }
     public void moveDown() {
-        this.posY += this.getStep();
+        this.posY += this.getStep() + Main.speed;
         if (this.posY >= NewNewYork.getRootHeight() - this.height) {
             this.posY = NewNewYork.getRootHeight() - this.height;
         } else {
-            distanceTravelled += getStep();
+            distanceTravelled += getStep() + Main.speed;
         }
         this.setPosY(this.posY);
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutY(this.posY * MiniMap.getScale().getY());
     }
     public void moveLeft() {
-        this.posX -= this.getStep();
+        this.posX -= this.getStep() + Main.speed;
         if (this.posX <= 0.0) {
             this.posX = 0.0;
         } else {
-            distanceTravelled += getStep();
+            distanceTravelled += getStep() + Main.speed;
         }
         this.setPosX(this.posX);
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
     }
     public void moveRight() {
-        this.posX += this.getStep();
+        this.posX += this.getStep() + Main.speed;
         if (this.posX >= NewNewYork.getRootWidth() - this.width) {
             this.posX = NewNewYork.getRootWidth() - this.width;
         } else {
-            distanceTravelled += getStep();
+            distanceTravelled += getStep() + Main.speed;
         }
         this.setPosX(this.posX);
         Main.getWorld().getMiniMap().getCitizensMap().get(this).setLayoutX(this.posX * MiniMap.getScale().getX());
     }
-    private void markThisDeviceAsSafe(Device device) {
+    private Device markThisDeviceAsSafe(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
+            return device;
         }
+        return null;
     }
     public void getHurt() {
         if ((this.healthValue - getHurtRate()) > 0) {
@@ -170,8 +170,8 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             }
         }
     }
-    public void interactWithMacro(Device device) {
-        markThisDeviceAsSafe(device);
+    public Device interactWithMacro(Device device) {
+        return markThisDeviceAsSafe(device);
     }
     public void setActive(boolean active) {
         isActive = active;
@@ -202,6 +202,11 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         for (Device device : Main.getWorld().getDevices()) {
             if (this.getMicroGroup().getBoundsInParent().intersects(device.getMacroGroup().getBoundsInParent())) {
                 interactWithMacro(device);
+                if (this instanceof RobotSanta) {
+                    Main.getWorld().getMomFriendlyRobots().addTransformedDeviceBySantas(device);
+                } else {
+                    Main.getWorld().getPlanetExpressOffice().addTransformedDeviceByTeam(device);
+                }
             }
         }
         if (time % 30 == 0) {
@@ -298,9 +303,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     public double getStep() {
         return step;
-    }
-    public double getSpeed() {
-        return speed * Main.speedCoefficient;
     }
     public ImageView getImageView() {
         return image;

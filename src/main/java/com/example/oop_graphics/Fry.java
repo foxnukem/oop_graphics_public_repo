@@ -10,7 +10,6 @@ public class Fry extends Nibblonian {
     private static final int hurtRate = 5;
     private static final int regenerateRate = 8;
     private static final double step = 10.0;
-    private static final double speed = 0.0;
     public Fry(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
@@ -26,19 +25,21 @@ public class Fry extends Nibblonian {
     public Fry() {
         this("Фрай", Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth() - (Main.startId % 10) * 20, Main.getWorld().getPlanetExpressOffice().getPosY() + (Main.startId % 100) * 21);
     }
-    private void stopTimerOnThisDevice(Device device) {
+    private Device stopTimerOnThisDevice(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
+            return device;
         }
+        return null;
     }
     @Override
     public void getHurt() {
         super.getHurt();
     }
     @Override
-    public void interactWithMacro(Device device) {
-        stopTimerOnThisDevice(device);
+    public Device interactWithMacro(Device device) {
+        return stopTimerOnThisDevice(device);
     }
     public int getInitialHealthValue() {
         return initialHealthValue;
@@ -51,9 +52,6 @@ public class Fry extends Nibblonian {
     }
     public double getStep() {
         return step;
-    }
-    public double getSpeed() {
-        return speed * Main.speedCoefficient;
     }
     @Override
     public String toString() {

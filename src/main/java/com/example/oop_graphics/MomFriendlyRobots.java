@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class MomFriendlyRobots {
     private final ArrayList<RobotSanta> robotSantas;
+    private final ArrayList<Device> transformedDevicesByTeam;
     private final double posX;
     private final double posY;
     private final double width;
@@ -29,6 +30,7 @@ public class MomFriendlyRobots {
     }
     public MomFriendlyRobots() {
         robotSantas = new ArrayList<>();
+        transformedDevicesByTeam = new ArrayList<>();
         officeName = new Text("Mom Friendly Robots");
         officeName.setFont(new Font("Monako", 20));
         officeName.setFill(Color.WHITE);
@@ -61,11 +63,19 @@ public class MomFriendlyRobots {
     public void removeRobotSanta(RobotSanta robotSanta) {
         robotSantas.remove(robotSanta);
     }
+    public void addTransformedDeviceBySantas(Device device) {
+        if (!transformedDevicesByTeam.contains(device) && device != null) {
+            transformedDevicesByTeam.add(device);
+        }
+    }
     public void lifeCycle() {
 
     }
     public ArrayList<RobotSanta> getRobotSantas() {
         return robotSantas;
+    }
+    public ArrayList<Device> getTransformedDevicesByTeam() {
+        return transformedDevicesByTeam;
     }
     public double getPosX() {
         return posX;

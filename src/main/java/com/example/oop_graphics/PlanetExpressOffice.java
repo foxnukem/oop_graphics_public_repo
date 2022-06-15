@@ -11,7 +11,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class PlanetExpressOffice {
-    private ArrayList<Nibblonian> teamMembers;
+    private final ArrayList<Nibblonian> teamMembers;
+    private final ArrayList<Device> transformedDevicesByTeam;
     private final double posX;
     private final double posY;
     private final double width;
@@ -23,6 +24,7 @@ public class PlanetExpressOffice {
 
     public PlanetExpressOffice() {
         teamMembers = new ArrayList<>();
+        transformedDevicesByTeam = new ArrayList<>();
         posX = 15;
         posY = 610;
         width = 445;
@@ -61,14 +63,19 @@ public class PlanetExpressOffice {
     public void removeTeamMember(Nibblonian teamMember) {
         teamMembers.remove(teamMember);
     }
+    public void addTransformedDeviceByTeam(Device device) {
+        if (!transformedDevicesByTeam.contains(device) && device != null) {
+            transformedDevicesByTeam.add(device);
+        }
+    }
     public void lifeCycle() {
 
     }
     public ArrayList<Nibblonian> getTeamMembers() {
         return teamMembers;
     }
-    public void setTeamMembers(ArrayList<Nibblonian> teamMembers) {
-        this.teamMembers = teamMembers;
+    public ArrayList<Device> getTransformedDevicesByTeam() {
+        return transformedDevicesByTeam;
     }
     public double getPosX() {
         return posX;

@@ -10,7 +10,6 @@ public class RobotSanta extends Fry {
     private static final int hurtRate = 7;
     private static final int regenerateRate = 10;
     private static final double step = 15.0;
-    private static final double speed = 0.0;
 
     public RobotSanta(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
@@ -28,15 +27,17 @@ public class RobotSanta extends Fry {
     public RobotSanta() {
         this("Робот Санта", Main.getWorld().getMomFriendlyRobots().getPosX() + (Main.startId % 10) * 10, Main.getWorld().getMomFriendlyRobots().getPosY() + (Main.startId % 10) * 35);
     }
-    private void makeBombFromThisDevice(Device device) {
+    private Device makeBombFromThisDevice(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
             devices.add(device);
             transformedDevices.setText(Integer.toString(devices.size()));
+            return device;
         }
+        return null;
     }
     @Override
-    public void interactWithMacro(Device device) {
-        makeBombFromThisDevice(device);
+    public Device interactWithMacro(Device device) {
+        return makeBombFromThisDevice(device);
     }
 
     // RobotSanta can damage other side objects
@@ -73,9 +74,6 @@ public class RobotSanta extends Fry {
     }
     public double getStep() {
         return step;
-    }
-    public double getSpeed() {
-        return speed * Main.speedCoefficient;
     }
     @Override
     public String toString() {

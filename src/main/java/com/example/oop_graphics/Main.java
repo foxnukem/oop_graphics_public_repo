@@ -29,7 +29,7 @@ import java.util.Objects;
 public class Main extends Application {
     public static long startId = 1000;
     public static long deviceStartId = 100;
-    public static double speedCoefficient = 0.5;
+    public static double speed = 0.5;
     private final static int viewPortWidth = 1920;
     private final static int viewPortHeight = 1080;
     private static double scrollX;
@@ -43,6 +43,7 @@ public class Main extends Application {
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
     private static Scene scene;
+    private int in = 0;
 
     @Override
     public void start(Stage stage) {
@@ -230,10 +231,17 @@ public class Main extends Application {
                     Platform.runLater(youLose::showAndWait);
                     this.stop();
                 }
+                if (!newNewYork.getCitizens().get(2).getDevices().contains(newNewYork.getDevices().get(in)) && in < newNewYork.getDevices().size() - 1) {
+                        newNewYork.getCitizens().get(2).moveTo(newNewYork.getDevices().get(in));
+
+                }
+                if (newNewYork.getCitizens().get(2).getDevices().contains(newNewYork.getDevices().get(in))) {
+                    in++;
+                }
             }
         };
         stage.setTitle("Futurama. The Game");
-        stage.getIcons().add(new Image(new File("src/images/futuramalogo.png").toURI().toString()));
+        stage.getIcons().add(new Image(new File("src/images/logo.png").toURI().toString()));
         stage.setMaximized(true);
         stage.setResizable(false);
         stage.setScene(scene);
@@ -276,20 +284,18 @@ public class Main extends Application {
         }
     }
     public void increaseSpeed() {
-        if (speedCoefficient + 0.1 > 1) {
-            speedCoefficient = 1;
+        if (speed + 2 > 2) {
+            speed = 2;
             return;
         }
-        speedCoefficient += 0.1;
-        speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
+        speed += 2;
     }
     public void decreaseSpeed() {
-        if (speedCoefficient - 0.1 < 0.1) {
-            speedCoefficient = 0.1;
+        if (speed - 2 < -6) {
+            speed = -6;
             return;
         }
-        speedCoefficient -= 0.1;
-        speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
+        speed -= 2;
     }
     public void spawnObjects() {
         newNewYork.addCitizen(new Nibblonian());
