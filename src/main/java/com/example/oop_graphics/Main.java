@@ -39,6 +39,7 @@ public class Main extends Application {
     private final static ScrollPane infoScrollPane = new ScrollPane();
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
+    private static boolean isAutoMoveEnabled = false;
     private final static NewNewYork newNewYork = new NewNewYork();
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
@@ -151,6 +152,10 @@ public class Main extends Application {
             if (keyEvent.getCode() == KeyCode.U) {
                 decreaseSpeed();
             }
+            // Enable/Disable automove
+            if (keyEvent.getCode() == KeyCode.A) {
+                isAutoMoveEnabled = !isAutoMoveEnabled;
+            }
             // The most efficient worker in Planet Express
             if (keyEvent.getCode() == KeyCode.W) {
                 Collections.sort(getWorld().getPlanetExpressOffice().getTeamMembers());
@@ -216,8 +221,8 @@ public class Main extends Application {
                     citizen.interactionWithWorld(frame);
                 }
                 for (Device device : getWorld().getDevices()) {
-                    if (device.getStatus() == Device.DeviceStatus.ACTIVEBOMB && frame % 2 == 0) {
-                        timer += 0.000001;
+                    if (device.getStatus() == Device.DeviceStatus.ACTIVEBOMB && frame % 3 == 0) {
+                        timer += 0.0001;
                     }
                 }
                 if (timer >= 1) {
@@ -227,8 +232,10 @@ public class Main extends Application {
                     Platform.runLater(youLose::showAndWait);
                     this.stop();
                 }
-                getWorld().getPlanetExpressOffice().lifeCycle();
-                getWorld().getMomFriendlyRobots().lifeCycle();
+                if (isAutoMoveEnabled) {
+                    getWorld().getPlanetExpressOffice().lifeCycle();
+                    getWorld().getMomFriendlyRobots().lifeCycle();
+                }
             }
         };
         stage.setTitle("Futurama. The Game");
