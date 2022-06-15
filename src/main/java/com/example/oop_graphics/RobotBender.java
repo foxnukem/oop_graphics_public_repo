@@ -15,12 +15,10 @@ public class RobotBender extends Fry {
     public RobotBender(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
-            image = new ImageView(new Image(new File("src/images/bender.png").toURI().toString()));
+            setImage(new ImageView(new Image(new File("src/images/bender.png").toURI().toString())));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        microGroup.getChildren().removeAll(microGroup.getChildren());
-        microGroup.getChildren().addAll(image, health, transformedDevices, border, objectId);
     }
 
     public RobotBender(double initialPosX, double initialPosY, boolean isActive) {
@@ -28,7 +26,7 @@ public class RobotBender extends Fry {
         this.setActive(isActive);
     }
     public RobotBender() {
-        this("Бендер", 1200, 1000);
+        this("Бендер", Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth() - (Main.startId % 10) * 21, Main.getWorld().getPlanetExpressOffice().getPosY() + (Main.startId % 100) * 22);
     }
     private void destroyThisBomb(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {

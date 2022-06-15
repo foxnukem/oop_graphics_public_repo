@@ -61,6 +61,9 @@ public class PlanetExpressOffice {
     public void removeTeamMember(Nibblonian teamMember) {
         teamMembers.remove(teamMember);
     }
+    public void lifeCycle() {
+
+    }
     public ArrayList<Nibblonian> getTeamMembers() {
         return teamMembers;
     }

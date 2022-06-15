@@ -16,19 +16,17 @@ public class RobotSanta extends Fry {
         super(name, initialPosX, initialPosY);
         isBad = true;
         try {
-            image = new ImageView(new Image(new File("src/images/santa.png").toURI().toString()));
+            setImage(new ImageView(new Image(new File("src/images/santa.png").toURI().toString())));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        microGroup.getChildren().removeAll(microGroup.getChildren());
-        microGroup.getChildren().addAll(image, health, transformedDevices, border, objectId);
     }
     public RobotSanta(double initialPosX, double initialPosY, boolean isActive) {
         this("Робот Санта", initialPosX, initialPosY);
         this.setActive(isActive);
     }
     public RobotSanta() {
-        this("Робот Санта", 1300, 1000);
+        this("Робот Санта", Main.getWorld().getMomFriendlyRobots().getPosX() + (Main.startId % 10) * 10, Main.getWorld().getMomFriendlyRobots().getPosY() + (Main.startId % 10) * 35);
     }
     private void makeBombFromThisDevice(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {

@@ -14,19 +14,17 @@ public class Fry extends Nibblonian {
     public Fry(String name, double initialPosX, double initialPosY) {
         super(name, initialPosX, initialPosY);
         try {
-            image = new ImageView(new Image(new File("src/images/fry.png").toURI().toString()));
+            setImage(new ImageView(new Image(new File("src/images/fry.png").toURI().toString())));
         } catch (Exception e) {
             System.out.println("Error");
         }
-        microGroup.getChildren().removeAll(microGroup.getChildren());
-        microGroup.getChildren().addAll(image, health, transformedDevices, border, objectId);
     }
     public Fry(double initialPosX, double initialPoxY, boolean isActive) {
         this("Фрай", initialPosX, initialPoxY);
         this.setActive(isActive);
     }
     public Fry() {
-        this("Фрай", 1100, 1000);
+        this("Фрай", Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth() - (Main.startId % 10) * 20, Main.getWorld().getPlanetExpressOffice().getPosY() + (Main.startId % 100) * 21);
     }
     private void stopTimerOnThisDevice(Device device) {
         if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {

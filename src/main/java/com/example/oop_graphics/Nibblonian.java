@@ -93,7 +93,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         this.setActive(isActive);
     }
     public Nibblonian() {
-        this("Жуйка", 1000, 1000);
+        this("Жуйка", Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth() - (Main.startId % 10) * 20, Main.getWorld().getPlanetExpressOffice().getPosY() + (Main.startId % 100) * 20);
     }
 
     public void moveUp() {
@@ -209,10 +209,21 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             damageOtherSide();
         }
     }
-    public void autoMove() {
-
+    public boolean moveTo(Device targetDevice) {
+        if (posY <= targetDevice.getPosY() + getStep()) {
+            moveDown();
+        } else if (posY >= targetDevice.getPosY() + targetDevice.getHeight() / 2 - getStep()) {
+            moveUp();
+        } else if (posY >= targetDevice.getPosY() && posY < targetDevice.getPosY() + targetDevice.getHeight()) {
+            if (posX <= targetDevice.getPosX() + getStep()) {
+                moveRight();
+            } else if (posX >= targetDevice.getPosX() + targetDevice.getHeight() / 2 - getStep()) {
+                moveLeft();
+            }
+        }
+        return this.getMicroGroup().getBoundsInParent().intersects(targetDevice.getMacroGroup().getBoundsInParent());
     }
-    public void moveTo(double posX, double posY) {
+    public void autoMove() {
 
     }
     public String getName() {
@@ -297,6 +308,8 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     public void setImage(ImageView image) {
         this.image = image;
+        microGroup.getChildren().removeAll(microGroup.getChildren());
+        microGroup.getChildren().addAll(this.image, health, transformedDevices, border, objectId);
     }
     public Line getHealth() {
         return health;

@@ -7,11 +7,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -21,10 +20,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -41,11 +39,11 @@ public class Main extends Application {
     private final static ScrollPane infoScrollPane = new ScrollPane();
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
-    private static boolean isSpawned = false;
     private final static NewNewYork newNewYork = new NewNewYork();
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
     private static Scene scene;
+    private static int m;
 
     @Override
     public void start(Stage stage) {
@@ -66,6 +64,7 @@ public class Main extends Application {
         newNewYork.addDevice(new Device(3500, 1900));
         newNewYork.addDevice(new Device(1000, 1500));
 
+        spawnObjects();
         initInfoPane();
 
         scrollPane.setPannable(true);
@@ -130,13 +129,21 @@ public class Main extends Application {
                     }
                 }
             }
-            // Spawn objects
-            if (keyEvent.getCode() == KeyCode.S) {
-                if (!isSpawned) {
-                    spawnObjects();
-                    isSpawned = true;
-                    NewNewYork.update();
-                }
+            if (keyEvent.getCode() == KeyCode.DIGIT1) {
+                newNewYork.addCitizen(new Nibblonian());
+                NewNewYork.update();
+            }
+            if (keyEvent.getCode() == KeyCode.DIGIT2) {
+                newNewYork.addCitizen(new Fry());
+                NewNewYork.update();
+            }
+            if (keyEvent.getCode() == KeyCode.DIGIT3) {
+                newNewYork.addCitizen(new RobotBender());
+                NewNewYork.update();
+            }
+            if (keyEvent.getCode() == KeyCode.DIGIT4) {
+                newNewYork.addCitizen(new RobotSanta());
+                NewNewYork.update();
             }
             // Move quicker
             if (keyEvent.getCode() == KeyCode.Y) {
@@ -207,12 +214,14 @@ public class Main extends Application {
                 } else {
                     frame = 0;
                 }
+                getWorld().getPlanetExpressOffice().lifeCycle();
+                getWorld().getMomFriendlyRobots().lifeCycle();
                 for (Nibblonian citizen : getWorld().getCitizens()) {
                     citizen.interactionWithWorld(frame);
                 }
                 for (Device device : getWorld().getDevices()) {
                     if (device.getStatus() == Device.DeviceStatus.ACTIVEBOMB && frame % 2 == 0) {
-                        timer += 0.001;
+                        timer += 0.000001;
                     }
                 }
                 if (timer >= 1) {
@@ -225,6 +234,7 @@ public class Main extends Application {
             }
         };
         stage.setTitle("Futurama. The Game");
+        stage.getIcons().add(new Image(new File("src/images/futuramalogo.png").toURI().toString()));
         stage.setMaximized(true);
         stage.setResizable(false);
         stage.setScene(scene);
@@ -283,7 +293,6 @@ public class Main extends Application {
         speedCoefficient = Math.round(speedCoefficient * 100) / 100.0;
     }
     public void spawnObjects() {
-
         newNewYork.addCitizen(new Nibblonian());
         newNewYork.addCitizen(new Fry());
         newNewYork.addCitizen(new RobotBender());

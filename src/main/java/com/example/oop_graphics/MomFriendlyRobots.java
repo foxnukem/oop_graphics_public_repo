@@ -61,6 +61,9 @@ public class MomFriendlyRobots {
     public void removeRobotSanta(RobotSanta robotSanta) {
         robotSantas.remove(robotSanta);
     }
+    public void lifeCycle() {
+
+    }
     public ArrayList<RobotSanta> getRobotSantas() {
         return robotSantas;
     }
