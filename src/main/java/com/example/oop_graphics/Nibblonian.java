@@ -201,11 +201,11 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     public void interactionWithWorld(int time) {
         for (Device device : Main.getWorld().getDevices()) {
             if (this.getMicroGroup().getBoundsInParent().intersects(device.getMacroGroup().getBoundsInParent())) {
-                interactWithMacro(device);
                 if (this instanceof RobotSanta) {
-                    Main.getWorld().getMomFriendlyRobots().addTransformedDeviceBySantas(device);
+                    Main.getWorld().getMomFriendlyRobots().addTransformedDeviceBySantas(interactWithMacro(device));
                 } else {
-                    Main.getWorld().getPlanetExpressOffice().addTransformedDeviceByTeam(device);
+                    Main.getWorld().getPlanetExpressOffice().addTransformedDeviceByTeam(interactWithMacro(device));
+                    System.out.println(Main.getWorld().getPlanetExpressOffice().getTransformedDevicesByTeam());
                 }
             }
         }

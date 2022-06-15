@@ -42,8 +42,6 @@ public class Main extends Application {
     private final static NewNewYork newNewYork = new NewNewYork();
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
-    private static Scene scene;
-    private int in = 0;
 
     @Override
     public void start(Stage stage) {
@@ -75,7 +73,7 @@ public class Main extends Application {
         StackPane.setAlignment(newNewYork.getMiniMap().getPane(), Pos.TOP_RIGHT);
         StackPane.setAlignment(infoPane, Pos.BOTTOM_RIGHT);
         infoPane.toBack();
-        scene = new Scene(group, viewPortWidth, viewPortHeight);
+        Scene scene = new Scene(group, viewPortWidth, viewPortHeight);
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             for (Nibblonian n : newNewYork.getCitizens()) {
@@ -231,13 +229,8 @@ public class Main extends Application {
                     Platform.runLater(youLose::showAndWait);
                     this.stop();
                 }
-                if (!newNewYork.getCitizens().get(2).getDevices().contains(newNewYork.getDevices().get(in)) && in < newNewYork.getDevices().size() - 1) {
-                        newNewYork.getCitizens().get(2).moveTo(newNewYork.getDevices().get(in));
-
-                }
-                if (newNewYork.getCitizens().get(2).getDevices().contains(newNewYork.getDevices().get(in))) {
-                    in++;
-                }
+                getWorld().getPlanetExpressOffice().lifeCycle();
+                getWorld().getMomFriendlyRobots().lifeCycle();
             }
         };
         stage.setTitle("Futurama. The Game");
