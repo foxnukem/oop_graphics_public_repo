@@ -205,7 +205,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
                     Main.getWorld().getMomFriendlyRobots().addTransformedDeviceBySantas(interactWithMacro(device));
                 } else {
                     Main.getWorld().getPlanetExpressOffice().addTransformedDeviceByTeam(interactWithMacro(device));
-                    System.out.println(Main.getWorld().getPlanetExpressOffice().getTransformedDevicesByTeam());
                 }
             }
         }
