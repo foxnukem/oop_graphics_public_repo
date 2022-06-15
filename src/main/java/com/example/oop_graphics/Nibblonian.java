@@ -215,7 +215,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
         }
     }
     public void moveTo(Device targetDevice) {
-        if (isActive || getDevices().contains(targetDevice)) {
+        if (isActive || getDevices().contains(targetDevice) || targetDevice == null) {
             return;
         }
         if (posY <= targetDevice.getPosY() + getStep()) {

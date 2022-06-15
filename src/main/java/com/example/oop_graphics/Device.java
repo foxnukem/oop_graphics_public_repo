@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.util.Objects;
 
-public class Device {
+public class Device implements Comparable<Device> {
     public enum DeviceStatus {
         UNDEFINED,
         SAFE,
@@ -149,6 +149,10 @@ public class Device {
     }
     public Group getMacroGroup() {
         return macroGroup;
+    }
+    @Override
+    public int compareTo(Device o) {
+        return Double.compare(this.posY, o.posY);
     }
     @Override
     public int hashCode() {

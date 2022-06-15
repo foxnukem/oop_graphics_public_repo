@@ -31,7 +31,7 @@ public class PlanetExpressOffice {
         height = 510;
 
         officeName = new Text("Planet Express");
-        officeName.setFont(new Font("Monako", 20));
+        officeName.setFont(new Font("Arial", 20));
         officeName.setFill(Color.WHITE);
         officeName.setX(this.posX + 10);
         officeName.setY(this.posY + 25);

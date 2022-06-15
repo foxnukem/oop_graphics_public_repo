@@ -293,6 +293,7 @@ public class Main extends Application {
         newNewYork.addCitizen(new Fry());
         newNewYork.addCitizen(new RobotBender());
         newNewYork.addCitizen(new RobotSanta());
+        newNewYork.addCitizen(new RobotSanta());
     }
     public static NewNewYork getWorld() {
         return Main.newNewYork;
