@@ -43,7 +43,6 @@ public class Main extends Application {
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
     private static Scene scene;
-    private static int m;
 
     @Override
     public void start(Stage stage) {

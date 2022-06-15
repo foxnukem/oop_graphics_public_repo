@@ -209,7 +209,10 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             damageOtherSide();
         }
     }
-    public boolean moveTo(Device targetDevice) {
+    public void moveTo(Device targetDevice) {
+        if (isActive || getDevices().contains(targetDevice)) {
+            return;
+        }
         if (posY <= targetDevice.getPosY() + getStep()) {
             moveDown();
         } else if (posY >= targetDevice.getPosY() + targetDevice.getHeight() / 2 - getStep()) {
@@ -221,10 +224,6 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
                 moveLeft();
             }
         }
-        return this.getMicroGroup().getBoundsInParent().intersects(targetDevice.getMacroGroup().getBoundsInParent());
-    }
-    public void autoMove() {
-
     }
     public String getName() {
         return name;
