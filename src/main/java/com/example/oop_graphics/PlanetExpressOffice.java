@@ -127,6 +127,7 @@ public class PlanetExpressOffice {
         if (allDevicesFromWorld.isEmpty()) {
             teamMembers.forEach(teamMember -> teamMember.moveToBase());
             teamMembers.forEach(teamMember -> isAllTeamMembersOnTheBase[indexOfTheBooleanArray.getAndIncrement()] = teamMember.isOnBase());
+            // Solution: https://stackoverflow.com/questions/8260881/what-is-the-most-elegant-way-to-check-if-all-values-in-a-boolean-array-are-true
             Main.setIsAutoMoveEnabledForPlanetExpressTeam(!Arrays.asList(isAllTeamMembersOnTheBase).stream().allMatch(Boolean::booleanValue));
         }
     }
