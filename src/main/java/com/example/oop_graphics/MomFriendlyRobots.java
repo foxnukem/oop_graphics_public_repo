@@ -9,8 +9,10 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MomFriendlyRobots {
     private final ArrayList<RobotSanta> robotSantas;
@@ -116,8 +118,12 @@ public class MomFriendlyRobots {
         // Move to targets
         processedDevices.forEach((robotSanta, device) -> robotSanta.moveTo(device));
         // Checking if there are non-transformed units
+        AtomicInteger indexOfTheBooleanArray = new AtomicInteger();
+        Boolean[] isAllRobotSantasOnTheBase = new Boolean[robotSantas.size()];
         if (allDevicesFromWorld.isEmpty()) {
             robotSantas.forEach(robotSanta -> robotSanta.moveToBase());
+            robotSantas.forEach(robotSanta -> isAllRobotSantasOnTheBase[indexOfTheBooleanArray.getAndIncrement()] = robotSanta.isOnBase());
+            Main.setIsAutoMoveEnabledForMomFriendlyRobotsTeam(!Arrays.asList(isAllRobotSantasOnTheBase).stream().allMatch(Boolean::booleanValue));
         }
     }
     public ArrayList<RobotSanta> getRobotSantas() {

@@ -9,7 +9,9 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlanetExpressOffice {
     private final ArrayList<Nibblonian> teamMembers;
@@ -76,7 +78,7 @@ public class PlanetExpressOffice {
             transformedDevicesByTeam.add(device);
         }
     }
-    public void lifeCycle() {
+    public void lifeCycle(int frame) {
         int indexForDevicesCollection = 0;
         if (!hasGottenDevicesInfo) {
             allDevicesFromWorld = (ArrayList<Device>) Main.getWorld().getDevices().clone();
@@ -120,8 +122,12 @@ public class PlanetExpressOffice {
         // Move to targets
         processedDevices.forEach((teamMember, device) -> teamMember.moveTo(device));
         // Checking if there are non-transformed units
+        AtomicInteger indexOfTheBooleanArray = new AtomicInteger();
+        Boolean[] isAllTeamMembersOnTheBase = new Boolean[teamMembers.size()];
         if (allDevicesFromWorld.isEmpty()) {
             teamMembers.forEach(teamMember -> teamMember.moveToBase());
+            teamMembers.forEach(teamMember -> isAllTeamMembersOnTheBase[indexOfTheBooleanArray.getAndIncrement()] = teamMember.isOnBase());
+            Main.setIsAutoMoveEnabledForPlanetExpressTeam(!Arrays.asList(isAllTeamMembersOnTheBase).stream().allMatch(Boolean::booleanValue));
         }
     }
     public ArrayList<Nibblonian> getTeamMembers() {

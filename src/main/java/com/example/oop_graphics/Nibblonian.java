@@ -207,7 +207,7 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
                 }
             }
         }
-        if (time % 30 == 0) {
+        if (time % 5 == 0) {
             regenerate();
             damageOtherSide();
         }

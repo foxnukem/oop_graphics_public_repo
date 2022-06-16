@@ -2,7 +2,6 @@ package com.example.oop_graphics;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,7 +15,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -39,7 +37,8 @@ public class Main extends Application {
     private final static ScrollPane infoScrollPane = new ScrollPane();
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
-    private static boolean isAutoMoveEnabled = true;
+    private static boolean isAutoMoveEnabledForPlanetExpressTeam = true;
+    private static boolean isAutoMoveEnabledForMomFriendlyRobotsTeam = true;
     private final static NewNewYork newNewYork = new NewNewYork();
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
@@ -162,7 +161,8 @@ public class Main extends Application {
             }
             // Enable/Disable automove
             if (keyEvent.getCode() == KeyCode.A) {
-                isAutoMoveEnabled = !isAutoMoveEnabled;
+                isAutoMoveEnabledForPlanetExpressTeam = !isAutoMoveEnabledForPlanetExpressTeam;
+                isAutoMoveEnabledForMomFriendlyRobotsTeam = !isAutoMoveEnabledForMomFriendlyRobotsTeam;
             }
             // The most efficient worker in Planet Express
             if (keyEvent.getCode() == KeyCode.W) {
@@ -216,20 +216,9 @@ public class Main extends Application {
                 for (Nibblonian citizen : getWorld().getCitizens()) {
                     citizen.interactionWithWorld(frame);
                 }
-                for (Device device : getWorld().getDevices()) {
-                    if (device.getStatus() == Device.DeviceStatus.ACTIVEBOMB && frame % 3 == 0) {
-                        timer += 0.000001;
-                    }
-                }
-                if (timer >= 1) {
-                    Alert youLose = new Alert(Alert.AlertType.INFORMATION);
-                    youLose.setTitle("Бабах!");
-                    youLose.setContentText("Залишилась як мінімум одна активна бомба. Ви програли!");
-                    Platform.runLater(youLose::showAndWait);
-                    isAutoMoveEnabled = false;
-                }
-                if (isAutoMoveEnabled) {
-                    getWorld().getPlanetExpressOffice().lifeCycle();
+                if (isAutoMoveEnabledForPlanetExpressTeam) {
+                    getWorld().getPlanetExpressOffice().lifeCycle(frame);
+                } if (isAutoMoveEnabledForMomFriendlyRobotsTeam) {
                     getWorld().getMomFriendlyRobots().lifeCycle();
                 }
             }
@@ -309,6 +298,12 @@ public class Main extends Application {
     }
     public static ScrollPane getScrollPane() {
         return scrollPane;
+    }
+    public static void setIsAutoMoveEnabledForPlanetExpressTeam(boolean value) {
+        isAutoMoveEnabledForPlanetExpressTeam = value;
+    }
+    public static void setIsAutoMoveEnabledForMomFriendlyRobotsTeam(boolean value) {
+        isAutoMoveEnabledForMomFriendlyRobotsTeam = value;
     }
     public static void main(String[] args) {
         launch();
