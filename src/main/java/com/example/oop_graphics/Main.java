@@ -191,18 +191,6 @@ public class Main extends Application {
                 }
                 activatedObjectsInfo.clear();
             }
-            if (keyEvent.isControlDown()) {
-                // Deserialization
-                if (keyEvent.getCode() == KeyCode.O) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Відкрити (десеріалізувати)");
-                }
-                // Serialization
-                else if (keyEvent.getCode() == KeyCode.S) {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Зберегти (серіалізувати)");
-                }
-            }
         });
         scrollPane.viewportBoundsProperty().addListener((observableValue, bounds, t1) -> {
             scrollX = -1 * t1.getMinX();
@@ -290,7 +278,7 @@ public class Main extends Application {
         }
     }
     public void increaseSpeed() {
-        if (speed + 2 > 2) {
+        if (speed + 2 > 4) {
             speed = 2;
             return;
         }
