@@ -17,7 +17,7 @@ public class MomFriendlyRobots {
     private final ArrayList<Device> transformedDevicesByTeam;
     private boolean hasGottenDevicesInfo = false;
     private ArrayList<Device> allDevicesFromWorld;
-    private final HashMap<RobotSanta, Device> processingDevices;
+    private final HashMap<RobotSanta, Device> processedDevices;
     private final double posX;
     private final double posY;
     private final double width;
@@ -37,7 +37,7 @@ public class MomFriendlyRobots {
         robotSantas = new ArrayList<>();
         transformedDevicesByTeam = new ArrayList<>();
 
-        processingDevices = new HashMap<>();
+        processedDevices = new HashMap<>();
         officeName = new Text("Mom Friendly Robots");
         officeName.setFont(new Font("Arial", 20));
         officeName.setFill(Color.WHITE);
@@ -66,10 +66,11 @@ public class MomFriendlyRobots {
     }
     public void addRobotSanta(RobotSanta newRobotSanta) {
         robotSantas.add(newRobotSanta);
-        processingDevices.put(newRobotSanta, null);
+        processedDevices.put(newRobotSanta, null);
     }
     public void removeRobotSanta(RobotSanta robotSanta) {
         robotSantas.remove(robotSanta);
+        processedDevices.remove(robotSanta);
     }
     public void addTransformedDeviceBySantas(Device device) {
         if (!transformedDevicesByTeam.contains(device) && device != null) {
@@ -88,25 +89,36 @@ public class MomFriendlyRobots {
         // Setting targets for each robot
         for (RobotSanta rs : robotSantas) {
             if (robotSantas.size() >= allDevicesFromWorld.size() && allDevicesFromWorld.size() > 0) {
-                processingDevices.put(rs, allDevicesFromWorld.get(0));
+                processedDevices.put(rs, allDevicesFromWorld.get(0));
             } else if (allDevicesFromWorld.size() == 0) {
-                processingDevices.put(rs, null);
+                processedDevices.put(rs, null);
             } else {
-                processingDevices.put(rs, allDevicesFromWorld.get(indexForDevicesCollection++));
+                processedDevices.put(rs, allDevicesFromWorld.get(indexForDevicesCollection++));
+            }
+        }
+        // Checking if one of the robots is injured
+        for (RobotSanta rs : robotSantas) {
+            if (rs.getHealthValue() <= 0.4 * rs.getInitialHealthValue() && !rs.isOnBase()) {
+                rs.moveToBase();
+                processedDevices.remove(rs);
             }
         }
         // Checking if processing units still UNDEFINED
         for (Device device : allDevicesFromWorld) {
-            if (device.getStatus() != Device.DeviceStatus.UNDEFINED && processingDevices.containsValue(device)) {
-                for (RobotSanta r : processingDevices.keySet()) {
-                    if (processingDevices.get(r).equals(device)) {
-                        processingDevices.put(r, null);
+            if (device.getStatus() != Device.DeviceStatus.UNDEFINED && processedDevices.containsValue(device)) {
+                for (RobotSanta r : processedDevices.keySet()) {
+                    if (processedDevices.get(r).equals(device)) {
+                        processedDevices.put(r, null);
                     }
                 }
             }
         }
         // Move to targets
-        processingDevices.forEach((robotSanta, device) -> robotSanta.moveTo(device));
+        processedDevices.forEach((robotSanta, device) -> robotSanta.moveTo(device));
+        // Checking if there are non-transformed units
+        if (allDevicesFromWorld.isEmpty()) {
+            robotSantas.forEach(robotSanta -> robotSanta.moveToBase());
+        }
     }
     public ArrayList<RobotSanta> getRobotSantas() {
         return robotSantas;

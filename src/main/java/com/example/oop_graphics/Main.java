@@ -35,11 +35,11 @@ public class Main extends Application {
     private static double scrollX;
     private static double scrollY;
     private final static Pane infoPane = new Pane();
-    private static boolean infoEnabled = true;
+    private static boolean infoEnabled = false;
     private final static ScrollPane infoScrollPane = new ScrollPane();
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
-    private static boolean isAutoMoveEnabled = false;
+    private static boolean isAutoMoveEnabled = true;
     private final static NewNewYork newNewYork = new NewNewYork();
     public static StackPane group = new StackPane();
     private final static ScrollPane scrollPane = new ScrollPane(newNewYork.getRoot());
@@ -230,7 +230,7 @@ public class Main extends Application {
                 }
                 for (Device device : getWorld().getDevices()) {
                     if (device.getStatus() == Device.DeviceStatus.ACTIVEBOMB && frame % 3 == 0) {
-                        timer += 0.0001;
+                        timer += 0.000001;
                     }
                 }
                 if (timer >= 1) {
@@ -238,7 +238,7 @@ public class Main extends Application {
                     youLose.setTitle("Бабах!");
                     youLose.setContentText("Залишилась як мінімум одна активна бомба. Ви програли!");
                     Platform.runLater(youLose::showAndWait);
-                    this.stop();
+                    isAutoMoveEnabled = false;
                 }
                 if (isAutoMoveEnabled) {
                     getWorld().getPlanetExpressOffice().lifeCycle();

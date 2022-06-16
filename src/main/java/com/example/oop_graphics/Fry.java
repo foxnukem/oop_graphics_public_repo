@@ -26,9 +26,9 @@ public class Fry extends Nibblonian {
         this("Фрай", Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getWidth() - (Main.startId % 10) * 20, Main.getWorld().getPlanetExpressOffice().getPosY() + (Main.startId % 100) * 21);
     }
     private Device stopTimerOnThisDevice(Device device) {
-        if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
-            devices.add(device);
-            transformedDevices.setText(Integer.toString(devices.size()));
+        if (!getDevices().contains(device) && device.changeStatusBecauseOf(this)) {
+            getDevices().add(device);
+            getTransformedDevices().setText(Integer.toString(getDevices().size()));
             return device;
         }
         return null;

@@ -16,7 +16,7 @@ public class PlanetExpressOffice {
     private final ArrayList<Device> transformedDevicesByTeam;
     private boolean hasGottenDevicesInfo = false;
     private ArrayList<Device> allDevicesFromWorld;
-    private final HashMap<Nibblonian, Device> processingDevices;
+    private final HashMap<Nibblonian, Device> processedDevices;
     private final double posX;
     private final double posY;
     private final double width;
@@ -27,7 +27,7 @@ public class PlanetExpressOffice {
     private final Group planetExpressArea;
 
     {
-        processingDevices = new HashMap<>();
+        processedDevices = new HashMap<>();
     }
 
     public PlanetExpressOffice() {
@@ -82,14 +82,47 @@ public class PlanetExpressOffice {
             allDevicesFromWorld = (ArrayList<Device>) Main.getWorld().getDevices().clone();
             allDevicesFromWorld.sort(Device::compareTo);
             hasGottenDevicesInfo = true;
-            System.out.println(allDevicesFromWorld);
         }
         allDevicesFromWorld.removeIf(device -> device.getStatus() == Device.DeviceStatus.SAFE || device.getStatus() == Device.DeviceStatus.STOPPEDTIMER || device.getStatus() == Device.DeviceStatus.DESTROYEDBOMB);
         // Setting targets for each team member
         for (Nibblonian n : teamMembers) {
-            
+            if (allDevicesFromWorld.size() == 0 ) {
+                processedDevices.put(n, null);
+            } else if (allDevicesFromWorld.get(0).getStatus() == Device.DeviceStatus.ACTIVEBOMB && n instanceof Fry || n instanceof RobotBender && teamMembers.size() >= allDevicesFromWorld.size() && allDevicesFromWorld.size() > 0) {
+                processedDevices.put(n, allDevicesFromWorld.get(0));
+            } else if (allDevicesFromWorld.get(0).getStatus() == Device.DeviceStatus.UNDEFINED && n instanceof Nibblonian && teamMembers.size() >= allDevicesFromWorld.size() && allDevicesFromWorld.size() > 0) {
+                processedDevices.put(n, allDevicesFromWorld.get(0));
+            } else {
+                if (allDevicesFromWorld.get(indexForDevicesCollection).getStatus() == Device.DeviceStatus.UNDEFINED && n instanceof Nibblonian) {
+                    processedDevices.put(n, allDevicesFromWorld.get(indexForDevicesCollection++));
+                } else if (allDevicesFromWorld.get(indexForDevicesCollection).getStatus() == Device.DeviceStatus.ACTIVEBOMB && n instanceof Fry || n instanceof RobotBender) {
+                    processedDevices.put(n, allDevicesFromWorld.get(indexForDevicesCollection++));
+                }
+            }
         }
-        processingDevices.forEach((teamMember, device) -> teamMember.moveTo(device));
+        // Checking if one of the team members is injured
+        for (Nibblonian n : teamMembers) {
+            if (n.getHealthValue() <= 0.4 * n.getInitialHealthValue() && !n.isOnBase()) {
+                n.moveToBase();
+                processedDevices.remove(n);
+            }
+        }
+        // Checking current status of each unit
+        for (Device device : allDevicesFromWorld) {
+            for (Nibblonian n : teamMembers) {
+                if (!processedDevices.containsValue(device) && device.getStatus() == Device.DeviceStatus.UNDEFINED) {
+                    processedDevices.put(n, device);
+                } else if (n instanceof Fry && !processedDevices.containsValue(device) && device.getStatus() == Device.DeviceStatus.ACTIVEBOMB) {
+                    processedDevices.put(n, device);
+                }
+            }
+        }
+        // Move to targets
+        processedDevices.forEach((teamMember, device) -> teamMember.moveTo(device));
+        // Checking if there are non-transformed units
+        if (allDevicesFromWorld.isEmpty()) {
+            teamMembers.forEach(teamMember -> teamMember.moveToBase());
+        }
     }
     public ArrayList<Nibblonian> getTeamMembers() {
         return teamMembers;

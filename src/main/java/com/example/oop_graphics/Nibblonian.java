@@ -27,18 +27,17 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     private boolean isActive;
     private int healthValue;
     private double distanceTravelled;
-    protected ArrayList<Device> devices;
-
+    private ArrayList<Device> devices;
     private double posX;
     private double posY;
     private double width;
     private double height;
-    protected ImageView image;
-    protected Line health;
-    protected Rectangle border;
-    protected Text transformedDevices;
-    protected Text objectId;
-    protected Group microGroup;
+    private ImageView image;
+    private Line health;
+    private Rectangle border;
+    private final Text transformedDevices;
+    private final Text objectId;
+    private Group microGroup;
 
     public Nibblonian(String name, double initialPosX, double initialPosY) {
         this.name = name;
@@ -229,6 +228,25 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
             }
         }
     }
+    public void moveToBase() {
+        if (isActive()) {
+            return;
+        }
+        if (getPosY() <= Main.getWorld().getPlanetExpressOffice().getPosY() + getStep()) {
+            moveDown();
+        } else if (getPosY() >= Main.getWorld().getPlanetExpressOffice().getPosY() + Main.getWorld().getPlanetExpressOffice().getHeight() / 2 - getStep()) {
+            moveUp();
+        } else if (getPosY() >= Main.getWorld().getPlanetExpressOffice().getPosY() && getPosY() < Main.getWorld().getPlanetExpressOffice().getPosY() + Main.getWorld().getPlanetExpressOffice().getHeight()) {
+            if (getPosX() <= Main.getWorld().getPlanetExpressOffice().getPosX() + getStep()) {
+                moveRight();
+            } else if (getPosX() >= Main.getWorld().getPlanetExpressOffice().getPosX() + Main.getWorld().getPlanetExpressOffice().getHeight() / 2 - getStep()) {
+                moveLeft();
+            }
+        }
+    }
+    public boolean isOnBase() {
+        return this.getMicroGroup().getBoundsInParent().intersects(Main.getWorld().getPlanetExpressOffice().getPlanetExpressArea().getBoundsInParent());
+    }
     public String getName() {
         return name;
     }
@@ -316,6 +334,9 @@ public class Nibblonian implements Cloneable, Comparable<Nibblonian> {
     }
     public void setHealth(Line health) {
         this.health = health;
+    }
+    public Text getTransformedDevices() {
+        return transformedDevices;
     }
     public Rectangle getBorder() {
         return border;

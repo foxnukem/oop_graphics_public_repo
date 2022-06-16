@@ -28,9 +28,9 @@ public class RobotSanta extends Fry {
         this("Робот Санта", Main.getWorld().getMomFriendlyRobots().getPosX() + (Main.startId % 10) * 10, Main.getWorld().getMomFriendlyRobots().getPosY() + (Main.startId % 10) * 35);
     }
     private Device makeBombFromThisDevice(Device device) {
-        if (!devices.contains(device) && device.changeStatusBecauseOf(this)) {
-            devices.add(device);
-            transformedDevices.setText(Integer.toString(devices.size()));
+        if (!getDevices().contains(device) && device.changeStatusBecauseOf(this)) {
+            getDevices().add(device);
+            getTransformedDevices().setText(Integer.toString(getDevices().size()));
             return device;
         }
         return null;
@@ -56,12 +56,33 @@ public class RobotSanta extends Fry {
         if (this.getMicroGroup().getBoundsInParent().intersects(Main.getWorld().getMomFriendlyRobots().getAdjacentArea().getBoundsInParent())) {
             if ((this.getHealthValue() + getRegenerateRate()) >= getInitialHealthValue()) {
                 this.setHealthValue(getInitialHealthValue());
-                this.health.setEndX((getHealthValue() * (getWidth() - 10)) / getInitialHealthValue() + health.getStartX());
+                this.getHealth().setEndX((getHealthValue() * (getWidth() - 10)) / getInitialHealthValue() + getHealth().getStartX());
             } else {
                 this.setHealthValue(getHealthValue() + getRegenerateRate());
-                this.health.setEndX((getHealthValue() * (getWidth() - 10)) / getInitialHealthValue() + health.getStartX());
+                this.getHealth().setEndX((getHealthValue() * (getWidth() - 10)) / getInitialHealthValue() + getHealth().getStartX());
             }
         }
+    }
+    @Override
+    public void moveToBase() {
+        if (isActive()) {
+            return;
+        }
+        if (getPosY() <= Main.getWorld().getMomFriendlyRobots().getPosY() + getStep()) {
+            moveDown();
+        } else if (getPosY() >= Main.getWorld().getMomFriendlyRobots().getPosY() + Main.getWorld().getMomFriendlyRobots().getHeight() / 2 - getStep()) {
+            moveUp();
+        } else if (getPosY() >= Main.getWorld().getMomFriendlyRobots().getPosY() && getPosY() < Main.getWorld().getMomFriendlyRobots().getPosY() + Main.getWorld().getMomFriendlyRobots().getHeight()) {
+            if (getPosX() <= Main.getWorld().getMomFriendlyRobots().getPosX() + getStep()) {
+                moveRight();
+            } else if (getPosX() >= Main.getWorld().getMomFriendlyRobots().getPosX() + Main.getWorld().getMomFriendlyRobots().getHeight() / 2 - getStep()) {
+                moveLeft();
+            }
+        }
+    }
+    @Override
+    public boolean isOnBase() {
+        return this.getMicroGroup().getBoundsInParent().intersects(Main.getWorld().getMomFriendlyRobots().getMomCorpArea().getBoundsInParent());
     }
     public int getInitialHealthValue() {
         return initialHealthValue;
