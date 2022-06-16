@@ -152,7 +152,7 @@ public class Device implements Comparable<Device> {
     }
     @Override
     public int compareTo(Device o) {
-        return Double.compare(this.posY, o.posY);
+        return Integer.compare(Double.compare(this.posX, o.posX), Double.compare(this.posY, o.posY));
     }
     @Override
     public int hashCode() {

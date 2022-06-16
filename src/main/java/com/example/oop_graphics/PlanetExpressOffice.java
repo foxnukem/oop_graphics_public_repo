@@ -9,10 +9,14 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PlanetExpressOffice {
     private final ArrayList<Nibblonian> teamMembers;
     private final ArrayList<Device> transformedDevicesByTeam;
+    private boolean hasGottenDevicesInfo = false;
+    private ArrayList<Device> allDevicesFromWorld;
+    private final HashMap<Nibblonian, Device> processingDevices;
     private final double posX;
     private final double posY;
     private final double width;
@@ -21,6 +25,10 @@ public class PlanetExpressOffice {
     private final Rectangle adjacentArea;
     private final Text officeName;
     private final Group planetExpressArea;
+
+    {
+        processingDevices = new HashMap<>();
+    }
 
     public PlanetExpressOffice() {
         teamMembers = new ArrayList<>();
@@ -69,7 +77,19 @@ public class PlanetExpressOffice {
         }
     }
     public void lifeCycle() {
-
+        int indexForDevicesCollection = 0;
+        if (!hasGottenDevicesInfo) {
+            allDevicesFromWorld = (ArrayList<Device>) Main.getWorld().getDevices().clone();
+            allDevicesFromWorld.sort(Device::compareTo);
+            hasGottenDevicesInfo = true;
+            System.out.println(allDevicesFromWorld);
+        }
+        allDevicesFromWorld.removeIf(device -> device.getStatus() == Device.DeviceStatus.SAFE || device.getStatus() == Device.DeviceStatus.STOPPEDTIMER || device.getStatus() == Device.DeviceStatus.DESTROYEDBOMB);
+        // Setting targets for each team member
+        for (Nibblonian n : teamMembers) {
+            
+        }
+        processingDevices.forEach((teamMember, device) -> teamMember.moveTo(device));
     }
     public ArrayList<Nibblonian> getTeamMembers() {
         return teamMembers;

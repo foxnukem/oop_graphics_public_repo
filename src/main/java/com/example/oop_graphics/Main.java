@@ -35,7 +35,7 @@ public class Main extends Application {
     private static double scrollX;
     private static double scrollY;
     private final static Pane infoPane = new Pane();
-    private static boolean infoEnabled = false;
+    private static boolean infoEnabled = true;
     private final static ScrollPane infoScrollPane = new ScrollPane();
     private final static ArrayList<String> activatedObjectsInfo = new ArrayList<>();
     private final static Text infoInText = new Text();
@@ -126,22 +126,30 @@ public class Main extends Application {
                         activatedObjectsInfo.clear();
                         updateInfo();
                     }
+                    // Remove microobject from macroobject
+                    if (keyEvent.getCode() == KeyCode.X) {
+                        newNewYork.removeCitizenFromMacroObject(n);
+                    }
+                    // Add microobject to macroobject
+                    if (keyEvent.getCode() == KeyCode.C) {
+                        newNewYork.addCitizenToMacroObject(n);
+                    }
                 }
             }
             if (keyEvent.getCode() == KeyCode.DIGIT1) {
-                newNewYork.addCitizen(new Nibblonian());
+                newNewYork.addCitizen(new Nibblonian(), true);
                 NewNewYork.update();
             }
             if (keyEvent.getCode() == KeyCode.DIGIT2) {
-                newNewYork.addCitizen(new Fry());
+                newNewYork.addCitizen(new Fry(), true);
                 NewNewYork.update();
             }
             if (keyEvent.getCode() == KeyCode.DIGIT3) {
-                newNewYork.addCitizen(new RobotBender());
+                newNewYork.addCitizen(new RobotBender(), true);
                 NewNewYork.update();
             }
             if (keyEvent.getCode() == KeyCode.DIGIT4) {
-                newNewYork.addCitizen(new RobotSanta());
+                newNewYork.addCitizen(new RobotSanta(), true);
                 NewNewYork.update();
             }
             // Move quicker
@@ -296,11 +304,11 @@ public class Main extends Application {
         speed -= 2;
     }
     public void spawnObjects() {
-        newNewYork.addCitizen(new Nibblonian());
-        newNewYork.addCitizen(new Fry());
-        newNewYork.addCitizen(new RobotBender());
-        newNewYork.addCitizen(new RobotSanta());
-        newNewYork.addCitizen(new RobotSanta());
+        newNewYork.addCitizen(new Nibblonian(), true);
+        newNewYork.addCitizen(new Fry(), true);
+        newNewYork.addCitizen(new RobotBender(), true);
+        newNewYork.addCitizen(new RobotSanta(), true);
+        newNewYork.addCitizen(new RobotSanta(), true);
     }
     public static NewNewYork getWorld() {
         return Main.newNewYork;

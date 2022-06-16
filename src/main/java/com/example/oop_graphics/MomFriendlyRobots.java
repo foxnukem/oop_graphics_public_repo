@@ -9,7 +9,6 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -81,8 +80,9 @@ public class MomFriendlyRobots {
         int indexForDevicesCollection = 0;
         if (!hasGottenDevicesInfo) {
             allDevicesFromWorld = (ArrayList<Device>) Main.getWorld().getDevices().clone();
-            allDevicesFromWorld.sort((device1, o) -> device1.compareTo(o));
+            allDevicesFromWorld.sort(Device::compareTo);
             allDevicesFromWorld.sort(Collections.reverseOrder());
+            hasGottenDevicesInfo = true;
         }
         allDevicesFromWorld.removeIf(device -> device.getStatus() != Device.DeviceStatus.UNDEFINED);
         // Setting targets for each robot

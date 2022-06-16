@@ -22,6 +22,8 @@ public class InsertController implements Initializable {
     @FXML
     private CheckBox isActive;
     @FXML
+    private CheckBox isMember;
+    @FXML
     private Button addButton;
 
     @Override
@@ -50,13 +52,13 @@ public class InsertController implements Initializable {
             noChosenClass.showAndWait();
         }
         if (classType.getValue() != null && classType.getValue().equals("Nibblonian")) {
-            Main.getWorld().addCitizen(new Nibblonian(objectPosX, objectPosY, isObjectActive));
+            Main.getWorld().addCitizen(new Nibblonian(objectPosX, objectPosY, isObjectActive), isMember.isSelected());
         } else if (classType.getValue() != null && classType.getValue().equals("Fry")) {
-            Main.getWorld().addCitizen(new Fry(objectPosX, objectPosY, isObjectActive));
+            Main.getWorld().addCitizen(new Fry(objectPosX, objectPosY, isObjectActive), isMember.isSelected());
         } else if (classType.getValue() != null && classType.getValue().equals("RobotBender")) {
-            Main.getWorld().addCitizen(new RobotBender(objectPosX, objectPosY, isObjectActive));
+            Main.getWorld().addCitizen(new RobotBender(objectPosX, objectPosY, isObjectActive), isMember.isSelected());
         } else if (classType.getValue() != null && classType.getValue().equals("RobotSanta")) {
-            Main.getWorld().addCitizen(new RobotSanta(objectPosX, objectPosY, isObjectActive));
+            Main.getWorld().addCitizen(new RobotSanta(objectPosX, objectPosY, isObjectActive), isMember.isSelected());
         }
         Stage stage = (Stage) addButton.getScene().getWindow();
         stage.close();

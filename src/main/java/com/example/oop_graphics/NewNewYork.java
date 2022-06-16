@@ -111,10 +111,10 @@ public class NewNewYork {
 
         update();
     }
-    public void addCitizen(Nibblonian citizen) {
-        if (citizen instanceof RobotSanta) {
+    public void addCitizen(Nibblonian citizen, boolean isNewCitizenAMemberOfTeam) {
+        if (citizen instanceof RobotSanta && isNewCitizenAMemberOfTeam) {
             momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
-        } else {
+        } else if (isNewCitizenAMemberOfTeam) {
             planetExpressOffice.addTeamMember(citizen);
         }
         citizens.add(citizen);
@@ -131,6 +131,20 @@ public class NewNewYork {
             root.getChildren().remove(citizen.getMicroGroup());
             miniMap.removeCitizenFromMiniMap(citizen);
             citizens.remove(citizen);
+            planetExpressOffice.removeTeamMember(citizen);
+        }
+    }
+    public void addCitizenToMacroObject(Nibblonian citizen) {
+        if (citizens.contains(citizen) && citizen instanceof RobotSanta) {
+            momFriendlyRobots.addRobotSanta((RobotSanta) citizen);
+        } else if (citizens.contains(citizen) && !(citizen instanceof RobotSanta)) {
+            planetExpressOffice.addTeamMember(citizen);
+        }
+    }
+    public void removeCitizenFromMacroObject(Nibblonian citizen) {
+        if (citizens.contains(citizen) && citizen instanceof RobotSanta) {
+            momFriendlyRobots.removeRobotSanta((RobotSanta) citizen);
+        } else if (citizens.contains(citizen) && !(citizen instanceof RobotSanta)) {
             planetExpressOffice.removeTeamMember(citizen);
         }
     }
