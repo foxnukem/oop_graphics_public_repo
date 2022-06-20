@@ -98,7 +98,7 @@ public class RobotSanta extends Fry {
     }
     @Override
     public String toString() {
-        return "RobotBender{" +
+        return "RobotSanta{" +
                 "name='" + getName() + '\'' +
                 ", id=" + getId() +
                 ", isBad=" + isBad() +

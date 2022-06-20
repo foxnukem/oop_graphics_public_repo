@@ -72,6 +72,7 @@ public class PlanetExpressOffice {
     }
     public void removeTeamMember(Nibblonian teamMember) {
         teamMembers.remove(teamMember);
+        processedDevices.remove(teamMember);
     }
     public void addTransformedDeviceByTeam(Device device) {
         if (!transformedDevicesByTeam.contains(device) && device != null) {
@@ -88,7 +89,7 @@ public class PlanetExpressOffice {
         allDevicesFromWorld.removeIf(device -> device.getStatus() == Device.DeviceStatus.SAFE || device.getStatus() == Device.DeviceStatus.STOPPEDTIMER || device.getStatus() == Device.DeviceStatus.DESTROYEDBOMB);
         // Setting targets for each team member
         for (Nibblonian n : teamMembers) {
-            if (allDevicesFromWorld.size() == 0 ) {
+            if (allDevicesFromWorld.size() == 0) {
                 processedDevices.put(n, null);
             } else if (allDevicesFromWorld.get(0).getStatus() == Device.DeviceStatus.ACTIVEBOMB && n instanceof Fry || n instanceof RobotBender && teamMembers.size() >= allDevicesFromWorld.size() && allDevicesFromWorld.size() > 0) {
                 processedDevices.put(n, allDevicesFromWorld.get(0));
