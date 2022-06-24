@@ -300,10 +300,14 @@ public class Main extends Application {
         return scrollPane;
     }
     public static void setIsAutoMoveEnabledForPlanetExpressTeam(boolean value) {
-        isAutoMoveEnabledForPlanetExpressTeam = value;
+        if (isAutoMoveEnabledForPlanetExpressTeam) {
+            isAutoMoveEnabledForPlanetExpressTeam = value;
+        }
     }
     public static void setIsAutoMoveEnabledForMomFriendlyRobotsTeam(boolean value) {
-        isAutoMoveEnabledForMomFriendlyRobotsTeam = value;
+        if (isAutoMoveEnabledForMomFriendlyRobotsTeam) {
+            isAutoMoveEnabledForMomFriendlyRobotsTeam = value;
+        }
     }
     public static void main(String[] args) {
         launch();

@@ -111,7 +111,7 @@ public class Device implements Comparable<Device> {
             NewNewYork.update();
             return true;
         }
-        return changeStatusBecauseOf((Nibblonian) robotBender);
+        return changeStatusBecauseOf((Fry) robotBender);
     }
     public boolean changeStatusBecauseOf(RobotSanta robotSanta) {
         if (status.equals(DeviceStatus.UNDEFINED)) {
